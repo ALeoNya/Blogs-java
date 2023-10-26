@@ -48,4 +48,7 @@ public class LoginServiceImpl implements LoginService {
         map.put("token",jwt);
         return new Response(417,"欢迎回来,铁御",map);
     }
+    //authenticate存入redis
+    //redisCache.setCacheObject("login:"+userId,loginUser);
+    //把token响应给前端
 }
