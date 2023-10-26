@@ -2,6 +2,7 @@ package com.example.springsecurity;
 
 import com.example.springsecurity.mapper.RoleResourceMapper;
 import com.example.springsecurity.pojo.UserAuth;
+import com.example.springsecurity.security.SecurityConfig;
 import com.example.springsecurity.security.service.LoginService;
 import com.example.springsecurity.service.Impt.UserDetailsServiceImpl;
 import org.junit.jupiter.api.Test;
@@ -36,5 +37,16 @@ class SecurityTests {
         user.setUsername("hiiro");
         user.setPassword("hiiro");
         loginService.login(user);
+    }
+
+    /**
+     * BCrypt加密
+     */
+    @Autowired
+    private SecurityConfig securityConfig;
+    @Test
+    void setBCrypt() {
+        System.out.println("密碼通過BCrypt加密后為");
+        System.out.println(securityConfig.passwordEncoder().encode("hiiro"));
     }
 }

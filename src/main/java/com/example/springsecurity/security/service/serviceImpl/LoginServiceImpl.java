@@ -34,7 +34,7 @@ public class LoginServiceImpl implements LoginService {
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(user.getUsername(),user.getPassword());
         Authentication authenticate = authenticationManager.authenticate(authenticationToken);
 //        securityConfig.passwordEncoder().encode(user.getPassword());
-        if(Objects.isNull(authenticate)||!securityConfig.passwordEncoder().matches(user.getPassword(), user.getPassword())){
+        if(Objects.isNull(authenticate)){
             throw new RuntimeException("任务代号4-1-7...登录失败");
         }
         //使用userid生成token
@@ -42,31 +42,10 @@ public class LoginServiceImpl implements LoginService {
         String userId = loginUser.getUser().getId().toString();
         String jwt = JwtUtil.createJWT(userId);
         //authenticate存入redis
-//        redisCache.setCacheObject("login:"+userId,loginUser);
+        //redisCache.setCacheObject("login:"+userId,loginUser);
         //把token响应给前端
         HashMap<String,String> map = new HashMap<>();
         map.put("token",jwt);
         return new Response(417,"欢迎回来,铁御",map);
     }
-
-//    @Override
-//    public Response login(UserAuth user) {
-//        try {
-//            UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(user.getUsername(),user.getPassword());
-//            Authentication authenticate = authenticationManager.authenticate(authenticationToken);
-//            //使用userid生成token
-//            LoginUser loginUser = (LoginUser) authenticate.getPrincipal();
-//            String userId = loginUser.getUser().getId().toString();
-//            String jwt = JwtUtil.createJWT(userId);
-//            //authenticate存入redis
-////            redisCache.setCacheObject("login:"+userId,loginUser);
-//            //把token响应给前端
-//            HashMap<String,String> map = new HashMap<>();
-//            map.put("token",jwt);
-//            return new Response(417,"欢迎回来,铁御",map);
-//        } catch (AuthenticationException e) {
-//            throw new RuntimeException("任务代号4-1-7...登录失败");
-//        }
-//    }
-
 }
