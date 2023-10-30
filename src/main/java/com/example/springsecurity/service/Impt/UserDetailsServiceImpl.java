@@ -32,10 +32,10 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         if(Objects.isNull(user)){
             throw new RuntimeException("用户名或密码错误");
         }
+        System.out.println(user.getId());
         //TODO 根据用户查询权限信息 添加到LoginUser中
         List<String> permissionKeyList =  roleResourceMapper.listPermsByUserId(user.getId());
-//        List<String> list = new ArrayList<>(Arrays.asList("admin"));  //测试先:写死
-
+        System.out.println(permissionKeyList);
         //封装成UserDetails对象返回
         return new LoginUser(user,permissionKeyList);
     }

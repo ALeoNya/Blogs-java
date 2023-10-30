@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.User;
@@ -27,8 +28,16 @@ public class ApiController {
     public Response login(@RequestBody UserAuth user){
         return loginService.login(user);
     }
-    @PostMapping("/article/addArticle")
-    @PreAuthorize("hasAnyAuthority('/article/addArticle')")  //权限颗粒度
+
+    @GetMapping("/hello")
+    @PreAuthorize("hasAuthority('/article/addArticle')")
+    public String hello(){
+        return "hello";
+    }
+
+    @GetMapping("/article/addArticle")
+    @PreAuthorize("hasAuthority('/article/addArticle')")  //权限颗粒度
+//    @PreAuthorize("hasAnyAuthority('admin','test','system:dept:list')")
     public Response addArticle() {
         return new Response(Code.SUCCESS, Msg.ADD_SUCCESS_MSG, "addArticle");
     }

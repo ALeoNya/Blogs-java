@@ -19,11 +19,17 @@ class SecurityTests {
     @Autowired
     private RoleResourceMapper roleResourceMapper;
 
+    /**
+     * 测试loadUserByUsername方法
+     */
     @Test
      void demo() {
-        userDetailsService.loadUserByUsername("hiiro");
+        userDetailsService.loadUserByUsername("aqua");
     }
 
+    /**
+     *
+     */
     @Test
     void listPermsByUserId() {
         System.out.println(roleResourceMapper.listPermsByUserId(3));
@@ -34,8 +40,8 @@ class SecurityTests {
     @Test
     void setLoginService() {
         UserAuth user =new UserAuth();
-        user.setUsername("hiiro");
-        user.setPassword("hiiro");
+        user.setUsername("aqua");
+        user.setPassword("aqua");
         loginService.login(user);
     }
 
@@ -47,6 +53,6 @@ class SecurityTests {
     @Test
     void setBCrypt() {
         System.out.println("密碼通過BCrypt加密后為");
-        System.out.println(securityConfig.passwordEncoder().encode("hiiro"));
+        System.out.println(securityConfig.passwordEncoder().encode("aqua"));
     }
 }

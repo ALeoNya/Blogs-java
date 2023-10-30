@@ -26,30 +26,12 @@ public class LoginServiceImpl implements LoginService {
 
     @Override
     public Response login(UserAuth user) {
+        //AuthenticationManager进行用户验证
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(user.getUsername(),user.getPassword());
         Authentication authenticate = authenticationManager.authenticate(authenticationToken);
 //        securityConfig.passwordEncoder().encode(user.getPassword());
         if(Objects.isNull(authenticate)){
-            throw new RuntimeException("任务代号4-1-7...登录失败");
-        }
-        //使用userid生成token
-        LoginUser loginUser = (LoginUser) authenticate.getPrincipal();
-        String userId = loginUser.getUser().getId().toString();
-        String jwt = JwtUtil.createJWT(userId);
-        //authenticate存入redis
-        //redisCache.setCacheObject("login:"+userId,loginUser);
-        //把token响应给前端
-        HashMap<String,String> map = new HashMap<>();
-        map.put("token",jwt);
-        return new Response(417,"欢迎回来,铁御",map);
-    }
-    //小綠點在哪裏？
-    public Response tologin(UserAuth user) {
-        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(user.getUsername(),user.getPassword());
-        Authentication authenticate = authenticationManager.authenticate(authenticationToken);
-//        securityConfig.passwordEncoder().encode(user.getPassword());
-        if(Objects.isNull(authenticate)){
-            throw new RuntimeException("任务代号4-1-7...登录失败");
+            return new Response(416,"任务代号4-1-7","...登录失败");
         }
         //使用userid生成token
         LoginUser loginUser = (LoginUser) authenticate.getPrincipal();

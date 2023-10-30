@@ -1,5 +1,6 @@
 package com.example.springsecurity.security;
 
+import com.example.springsecurity.controller.interceptor.LoginInterceptor;
 import com.example.springsecurity.security.handler.MyAuthenticationFailureHandler;
 import com.example.springsecurity.security.util.MyAuthenticationEntryPoint;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +18,9 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.AccessDeniedHandler;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+import javax.servlet.Filter;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -26,7 +29,6 @@ import java.io.IOException;
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)  //细粒度控制
-
 public class SecurityConfig {
 
     //授权（过滤器
@@ -34,6 +36,8 @@ public class SecurityConfig {
     MyAuthenticationFailureHandler myAuthenticationFailureHandler;
     @Autowired
     MyAuthenticationEntryPoint AuthenticationEntryPoint;
+    @Autowired
+    private LoginInterceptor loginInterceptor;
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.authorizeRequests()
@@ -48,7 +52,9 @@ public class SecurityConfig {
                 .and()
                 .formLogin()  //开启表单验证
                 .permitAll();
+        http.addFilterBefore((Filter) loginInterceptor,UsernamePasswordAuthenticationFilter.class);
         http.csrf().disable();
+
         ////配置handler处理器(不知道为什么不生效
         http.formLogin()
                 .failureHandler(myAuthenticationFailureHandler);
