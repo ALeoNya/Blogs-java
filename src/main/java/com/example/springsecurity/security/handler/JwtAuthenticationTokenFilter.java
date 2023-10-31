@@ -18,6 +18,9 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Objects;
 
+/**
+ * JWT过滤器
+ */
 @Component
 public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
 
@@ -39,7 +42,9 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
         String userid;
         try {
             Claims claims = JwtUtil.parseJWT(token);
-            userid = claims.getSubject();
+//            userid = claims.getSubject();  //解析有问题
+//            System.out.println(userid);
+            userid = claims.getId();
         } catch (Exception e) {
             e.printStackTrace();
             throw new RuntimeException("token非法");
@@ -51,8 +56,8 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
 //            throw new RuntimeException("用户未登录");
 //        }
         //从mysql中获取用户信息
-//        LoginUser loginUser = userAuthMapper.selectBylId(userid);
         LoginUser loginuser = new LoginUser(userAuthMapper.selectById(userid),null);
+        System.out.println(loginuser);
         //存入SecurityContextHolder
         //TODO 获取权限信息封装到Authentication中
         UsernamePasswordAuthenticationToken authenticationToken =

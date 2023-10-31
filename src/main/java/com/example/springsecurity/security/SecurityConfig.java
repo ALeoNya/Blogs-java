@@ -1,6 +1,6 @@
 package com.example.springsecurity.security;
 
-import com.example.springsecurity.controller.interceptor.LoginInterceptor;
+import com.example.springsecurity.security.handler.JwtAuthenticationTokenFilter;
 import com.example.springsecurity.security.handler.MyAuthenticationFailureHandler;
 import com.example.springsecurity.security.util.MyAuthenticationEntryPoint;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,7 +37,7 @@ public class SecurityConfig {
     @Autowired
     MyAuthenticationEntryPoint AuthenticationEntryPoint;
     @Autowired
-    private LoginInterceptor loginInterceptor;
+    JwtAuthenticationTokenFilter jwtAuthenticationTokenFilter;
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.authorizeRequests()
@@ -52,7 +52,7 @@ public class SecurityConfig {
                 .and()
                 .formLogin()  //开启表单验证
                 .permitAll();
-        http.addFilterBefore((Filter) loginInterceptor,UsernamePasswordAuthenticationFilter.class);
+        http.addFilterBefore(jwtAuthenticationTokenFilter,UsernamePasswordAuthenticationFilter.class);
         http.csrf().disable();
 
         ////配置handler处理器(不知道为什么不生效

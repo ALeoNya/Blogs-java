@@ -30,7 +30,7 @@ public class ApiController {
     }
 
     @GetMapping("/hello")
-    @PreAuthorize("hasAuthority('/article/addArticle')")
+//    @PreAuthorize("hasAuthority('/article/addArticle')")
     public String hello(){
         return "hello";
     }
