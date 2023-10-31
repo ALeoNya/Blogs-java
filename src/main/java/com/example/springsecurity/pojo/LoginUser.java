@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.stereotype.Component;
 
 
 import java.util.Collection;
@@ -14,7 +15,7 @@ import java.util.stream.Collectors;
 
 @Data
 @NoArgsConstructor
-
+@Component
 // 重写UserDetails中的接口
 public class LoginUser implements UserDetails {
     private UserAuth user;

@@ -1,4 +1,4 @@
-package com.example.springsecurity.service.Impt;
+package com.example.springsecurity.security.service.serviceImpl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.example.springsecurity.mapper.RoleResourceMapper;
@@ -16,6 +16,10 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
+/**
+ *  一个接口方法, 用于通过用户名获取用户数据.
+ *  返回 UserDetails 对象, 表示用户的核心信息 (用户名, 用户密码, 权限等信息).
+ */
 @Service
 public class UserDetailsServiceImpl implements UserDetailsService {
     @Autowired

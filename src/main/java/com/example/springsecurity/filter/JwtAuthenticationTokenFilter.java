@@ -1,5 +1,6 @@
-package com.example.springsecurity.security.handler;
+package com.example.springsecurity.filter;
 
+import com.example.springsecurity.mapper.RoleResourceMapper;
 import com.example.springsecurity.mapper.UserAuthMapper;
 import com.example.springsecurity.pojo.LoginUser;
 import com.example.springsecurity.util.jwt.JwtUtil;
@@ -16,7 +17,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.Objects;
+import java.util.List;
 
 /**
  * JWT过滤器
@@ -28,7 +29,8 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
 //    private RedisCache redisCache;
     @Autowired
     private UserAuthMapper userAuthMapper;
-
+    @Autowired
+    private RoleResourceMapper roleResourceMapper;
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException, ServletException, IOException {
         //获取token
@@ -45,6 +47,7 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
 //            userid = claims.getSubject();  //解析有问题
 //            System.out.println(userid);
             userid = claims.getId();
+//            System.out.println("userid"+userid);
         } catch (Exception e) {
             e.printStackTrace();
             throw new RuntimeException("token非法");
@@ -56,12 +59,13 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
 //            throw new RuntimeException("用户未登录");
 //        }
         //从mysql中获取用户信息
-        LoginUser loginuser = new LoginUser(userAuthMapper.selectById(userid),null);
-        System.out.println(loginuser);
+        List<String> permissionKeyList =  roleResourceMapper.listPermsByUserId(Integer.parseInt(userid));
+        LoginUser loginUser = new LoginUser(userAuthMapper.selectById(userid),permissionKeyList);
+
         //存入SecurityContextHolder
         //TODO 获取权限信息封装到Authentication中
         UsernamePasswordAuthenticationToken authenticationToken =
-                new UsernamePasswordAuthenticationToken(loginuser,null,null);
+                new UsernamePasswordAuthenticationToken(loginUser,null,loginUser.getAuthorities());
         SecurityContextHolder.getContext().setAuthentication(authenticationToken);
         //放行
         filterChain.doFilter(request, response);

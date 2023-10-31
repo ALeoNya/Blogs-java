@@ -1,4 +1,4 @@
-package com.example.springsecurity.security.handler;
+package com.example.springsecurity.filter;
 
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;

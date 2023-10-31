@@ -4,11 +4,10 @@ import com.example.springsecurity.mapper.RoleResourceMapper;
 import com.example.springsecurity.pojo.UserAuth;
 import com.example.springsecurity.security.SecurityConfig;
 import com.example.springsecurity.security.service.LoginService;
-import com.example.springsecurity.service.Impt.UserDetailsServiceImpl;
+import com.example.springsecurity.security.service.serviceImpl.UserDetailsServiceImpl;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.security.core.userdetails.UserDetails;
 
 @SpringBootTest
 class SecurityTests {

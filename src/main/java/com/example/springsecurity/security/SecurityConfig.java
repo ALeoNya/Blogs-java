@@ -1,7 +1,7 @@
 package com.example.springsecurity.security;
 
-import com.example.springsecurity.security.handler.JwtAuthenticationTokenFilter;
-import com.example.springsecurity.security.handler.MyAuthenticationFailureHandler;
+import com.example.springsecurity.filter.JwtAuthenticationTokenFilter;
+import com.example.springsecurity.filter.MyAuthenticationFailureHandler;
 import com.example.springsecurity.security.util.MyAuthenticationEntryPoint;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -20,7 +20,6 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-import javax.servlet.Filter;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
