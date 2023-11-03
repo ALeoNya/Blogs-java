@@ -136,6 +136,12 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
             } else {
                 // 未通过验证（但token为空直接被security自动重定向到了登录页面
                 map.put("msg", "未通过验证");
+                // 将map转为json
+                map.put("state", false);
+                String json = new ObjectMapper().writeValueAsString(map);
+                response.setContentType("application/json;charset=UTF-8");
+                response.getWriter().println(json);  //把报错信息添加到键值对中去
+                System.out.println(json);
             }
         //报错信息反馈
         } catch (SignatureException e) {
@@ -144,22 +150,40 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
         } catch (UnsupportedJwtException e) {
             e.printStackTrace();
             map.put("msg", "不支持的签名");
+            // 将map转为json
+            map.put("state", false);
+            String json = new ObjectMapper().writeValueAsString(map);
+            response.setContentType("application/json;charset=UTF-8");
+            response.getWriter().println(json);  //把报错信息添加到键值对中去
+            System.out.println(json);
         } catch (ExpiredJwtException e) {
             e.printStackTrace();
             map.put("msg", "token过期");
+            // 将map转为json
+            map.put("state", false);
+            String json = new ObjectMapper().writeValueAsString(map);
+            response.setContentType("application/json;charset=UTF-8");
+            response.getWriter().println(json);  //把报错信息添加到键值对中去
+            System.out.println(json);
         } catch (MalformedJwtException e) { // IllegalArgumentException
             e.printStackTrace();
             map.put("msg", "不支持的签名格式");
+            // 将map转为json
+            map.put("state", false);
+            String json = new ObjectMapper().writeValueAsString(map);
+            response.setContentType("application/json;charset=UTF-8");
+            response.getWriter().println(json);  //把报错信息添加到键值对中去
+            System.out.println(json);
         } catch (Exception e) {
             e.printStackTrace();
             map.put("msg", "token无效");
+            // 将map转为json
+            map.put("state", false);
+            String json = new ObjectMapper().writeValueAsString(map);
+            response.setContentType("application/json;charset=UTF-8");
+            response.getWriter().println(json);  //把报错信息添加到键值对中去
+            System.out.println(json);
         }
-        // 将map转为json
-        map.put("state", false);
-        String json = new ObjectMapper().writeValueAsString(map);
-        response.setContentType("application/json;charset=UTF-8");
-        response.getWriter().println(json);  //把报错信息添加到键值对中去
-        System.out.println(json);
     }
 }
 
