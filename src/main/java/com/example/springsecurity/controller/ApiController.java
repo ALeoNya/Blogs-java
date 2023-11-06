@@ -52,7 +52,7 @@ public class ApiController {
     public Response getListArticle() {
         return new Response(Code.SUCCESS, Msg.ADD_SUCCESS_MSG, "getListArticle");
     }
-    @PostMapping("/article/delArticle")
+    @GetMapping("/article/delArticle")
     @PreAuthorize("hasAnyAuthority('/article/delArticle')")
     public Response delArticle() {
         return new Response(Code.SUCCESS, Msg.ADD_SUCCESS_MSG, "delArticle");

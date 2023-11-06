@@ -1,81 +1,9 @@
-//package com.example.springsecurity.filter;
-//import com.example.springsecurity.mapper.RoleResourceMapper;
-//import com.example.springsecurity.mapper.UserAuthMapper;
-//import com.example.springsecurity.pojo.LoginUser;
-//import com.example.springsecurity.util.jwt.JwtUtil;
-//import io.jsonwebtoken.Claims;
-//import org.springframework.beans.factory.annotation.Autowired;
-//import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-//import org.springframework.security.core.context.SecurityContextHolder;
-//import org.springframework.stereotype.Component;
-//import org.springframework.util.StringUtils;
-//import org.springframework.web.filter.OncePerRequestFilter;
-//
-//import javax.servlet.FilterChain;
-//import javax.servlet.ServletException;
-//import javax.servlet.http.HttpServletRequest;
-//import javax.servlet.http.HttpServletResponse;
-//import java.io.IOException;
-//import java.util.List;
-//import io.jsonwebtoken.SignatureException;
-///**
-// * JWT过滤器
-// */
-//@Component
-//public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
-//
-////    @Autowired
-////    private RedisCache redisCache;
-//    @Autowired
-//    private UserAuthMapper userAuthMapper;
-//    @Autowired
-//    private RoleResourceMapper roleResourceMapper;
-//    @Override
-//    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException, ServletException, IOException {
-//        //获取token
-//        String token = request.getHeader("token");
-//        if (!StringUtils.hasText(token)) {
-//            //放行
-//            filterChain.doFilter(request, response);
-//            return;
-//        }
-//        //解析token获取userid
-//        String userid;
-//        try {
-//            Claims claims = JwtUtil.parseJWT(token);
-//            userid = claims.getId();
-//        } catch (SignatureException e) {
-//            e.printStackTrace();
-//            throw new RuntimeException("token非法");
-//        }
-//        //从redis中获取用户信息
-////        String redisKey = "login:" + userid;
-////        LoginUser loginUser = redisCache.getCacheObject(redisKey);
-////        if(Objects.isNull(loginUser)){
-////            throw new RuntimeException("用户未登录");
-////        }
-//        //从mysql中获取用户信息
-//        List<String> permissionKeyList =  roleResourceMapper.listPermsByUserId(Integer.parseInt(userid));
-//        LoginUser loginUser = new LoginUser(userAuthMapper.selectById(userid),permissionKeyList);
-//
-//        //存入SecurityContextHolder
-//        //TODO 获取权限信息封装到Authentication中
-//        UsernamePasswordAuthenticationToken authenticationToken =
-//                new UsernamePasswordAuthenticationToken(loginUser,null,loginUser.getAuthorities());
-//        SecurityContextHolder.getContext().setAuthentication(authenticationToken);
-//        //放行
-//        filterChain.doFilter(request, response);
-//    }
-//}
-//
-
-
 package com.example.springsecurity.filter;
+
 import com.example.springsecurity.mapper.RoleResourceMapper;
 import com.example.springsecurity.mapper.UserAuthMapper;
 import com.example.springsecurity.pojo.LoginUser;
 import com.example.springsecurity.util.jwt.JwtUtil;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -83,7 +11,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
-
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -98,8 +25,7 @@ import java.util.Map;
  */
 @Component
 public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
-
-    //    @Autowired
+//    @Autowired
 //    private RedisCache redisCache;
     @Autowired
     private UserAuthMapper userAuthMapper;
@@ -110,7 +36,7 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
         //获取token
         String token = request.getHeader("token");
         if (!StringUtils.hasText(token)) {
-            //放行
+            //放行 没有TOKEN就放行到下一个过滤器再判断，这里是判断TOKEN的
             filterChain.doFilter(request, response);
             return;
         }
@@ -131,7 +57,7 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
                 UsernamePasswordAuthenticationToken authenticationToken =
                         new UsernamePasswordAuthenticationToken(loginUser,null,loginUser.getAuthorities());
                 SecurityContextHolder.getContext().setAuthentication(authenticationToken);
-                //放行
+                //放行 传给过滤器链接中的下一个过滤器如果没有那么传递到请求的资源中去
                 filterChain.doFilter(request, response);
             } else {
                 // 未通过验证（但token为空直接被security自动重定向到了登录页面

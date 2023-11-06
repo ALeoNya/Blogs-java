@@ -29,7 +29,7 @@ public class LoginServiceImpl implements LoginService {
         //AuthenticationManager进行用户验证
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(user.getUsername(),user.getPassword());
         Authentication authenticate = authenticationManager.authenticate(authenticationToken);
-//        securityConfig.passwordEncoder().encode(user.getPassword());
+//        securityConfig.passwordEncoder().encode(us er.getPassword());
         if(Objects.isNull(authenticate)){
             return new Response(416,"任务代号4-1-7","...登录失败");
         }
