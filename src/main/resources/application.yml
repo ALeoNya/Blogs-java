@@ -6,9 +6,9 @@ spring:
   redis:
     database: 0
 #    host: 43.142.32.223
-    host: localhost
+    host: 127.0.0.1
     port: 6379
-    password: 1E6Y01CCCp
+#    password: 1E6Y01CCCp
     pool:
       max-idle: 16
       max-active: 32
