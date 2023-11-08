@@ -1,10 +1,13 @@
 package com.example.springsecurity.util.redis.config;
 
+import com.example.springsecurity.pojo.UserAuth;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
+
+import java.util.List;
 
 @Configuration
 public class RedisConfig {
@@ -26,6 +29,12 @@ public class RedisConfig {
         template.setHashValueSerializer(serializer);
 
         template.afterPropertiesSet();
+        return template;
+    }
+    @Bean
+    public RedisTemplate<String, Object> redisTemplateA(RedisConnectionFactory factory) {
+        RedisTemplate<String, Object> template = new RedisTemplate<>();
+        template.setConnectionFactory(factory);
         return template;
     }
 }

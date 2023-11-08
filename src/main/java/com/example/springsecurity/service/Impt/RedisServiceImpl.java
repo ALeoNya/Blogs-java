@@ -9,6 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import javax.annotation.Resource;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -53,10 +54,10 @@ public class RedisServiceImpl implements RedisService {
      * @param time 时间
      * @return true/false
      */
-    public boolean cacheList(int k, List v, long time) {
+    public boolean cacheList(int k, Object v, long time) {
         try {
             String key = KEY_PREFIX_LIST + k;
-            ListOperations<String, List> opsForList = redisTemplate.opsForList();
+            ListOperations<String, Object> opsForList = redisTemplate.opsForList();
             //此处为right push 方法/ 也可以 left push ..
             opsForList.rightPush(key,v);
             if (time > 0){
