@@ -27,10 +27,7 @@ public class InitRedis {
     private ResourceMapper resourceMapper;
 
     @Autowired
-    private RedisTemplate<String, String> redisTemplate;
-
-//    @Autowired
-//    private RedisTemplate<String, List<UserAuth>> redisTemplate;
+    private RedisTemplate redisTemplate;
 
     @Autowired
     private RedisService redisService;
@@ -41,14 +38,14 @@ public class InitRedis {
         for(int i = 0; i<list.size(); i++) {
             System.out.println(list.get(i).getId());
             int time = 3600000;
-            redisTemplate.opsForValue().set(list.get(i).getUsername(),list.get(i).getPassword());
-//            redisService.cacheList(list.get(i).getId(), list.get(i), time);
-
+//            redisTemplate.opsForValue().set(list.get(i).getUsername(),list.get(i));
+            System.out.println(list.get(i));
+            redisService.cacheList(list.get(i).getId(),list.get(i),time);
         }
-        Object value = redisTemplate.opsForValue().get("hiiro");
-//        String value = (String) redisTemplateA.opsForValue().get("info:bear:list1");
-//        String value = redisTemplate.opsForValue().get("list3");
-        System.out.println(value);
+        UserAuth userAuth = (UserAuth) redisTemplate.opsForValue().get("hiiro");
+        System.out.println(userAuth);
+        List<UserAuth> userAuth1 = (List<UserAuth>) redisTemplate.opsForValue().get("info:bear:list1");
+        System.out.println(userAuth1);
     }
 
 //    @Autowired
