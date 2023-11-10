@@ -31,27 +31,20 @@ public class InitRedis {
 
     @Autowired
     private RedisService redisService;
+
     @PostConstruct  //springboot初始化后自动执行
     public void initRedis() {
         // 初始化 Redis(用户认证授权模块)
-        ArrayList<UserAuth> list = (ArrayList<UserAuth>) userAuthMapper.selectList(null);
-        for(int i = 0; i<list.size(); i++) {
-            System.out.println(list.get(i).getId());
-            int time = 3600000;
-//            redisTemplate.opsForValue().set(list.get(i).getUsername(),list.get(i));
-            System.out.println(list.get(i));
-            redisService.cacheList(list.get(i).getId(),list.get(i),time);
-        }
-        UserAuth userAuth = (UserAuth) redisTemplate.opsForValue().get("hiiro");
-        System.out.println(userAuth);
-        List<UserAuth> userAuth1 = (List<UserAuth>) redisTemplate.opsForValue().get("info:bear:list1");
-        System.out.println(userAuth1);
-    }
+//        ArrayList<UserAuth> list = (ArrayList<UserAuth>) userAuthMapper.selectList(null);
+//        for(int i = 0; i<list.size(); i++) {
+//            int time = 3600000;
+//            redisService.cacheValue(list.get(i).getId(), list.get(i), time);
+//        }
+        userAuthMapper.selectList(null)
+                .stream()
+                .forEach(userAuth -> redisService.cacheValue(userAuth.getId(), userAuth, 3600000));
 
-//    @Autowired
-//    private RedisTemplate<String, List<UserAuth>> redisTemplateA;
-//    @PostConstruct
-//    public void getValueFromRedis() {
-//        System.out.println(redisTemplateA.opsForValue().get("info:bear:list1"));
-//    }
+        UserAuth userAuth = (UserAuth) redisTemplate.opsForValue().get("info:bear:list1");
+        System.out.println(userAuth);
+    }
 }

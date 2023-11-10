@@ -33,9 +33,28 @@ public class RedisServiceImpl implements RedisService {
     /**
      * 添加 key:string 缓存
      */
-    public boolean cacheValue(String key, String value, long time) {
+    public boolean cacheValue(int k, Object value, long time) {
+        String key = KEY_PREFIX_LIST +k;
         try {
-            ValueOperations<String,String> ops = redisTemplate.opsForValue();
+            ValueOperations ops = redisTemplate.opsForValue();
+            ops.set(key,value);
+            if(time>0) {
+                redisTemplate.expire(key,time, TimeUnit.SECONDS);
+            }
+            return true;
+        } catch (Throwable e) {
+            log.error("缓存存入失败key:[{}] value:[{}]", key, value);
+        }
+        return false;
+    }
+
+    /**
+     * 添加 key:string 缓存
+     */
+    public boolean cacheStringValue(int k, String value, long time) {
+        String key = KEY_PREFIX_KEY +k;
+        try {
+            ValueOperations ops = redisTemplate.opsForValue();
             ops.set(key,value);
             if(time>0) {
                 redisTemplate.expire(key,time, TimeUnit.SECONDS);
@@ -54,10 +73,10 @@ public class RedisServiceImpl implements RedisService {
      * @param time 时间
      * @return true/false
      */
-    public boolean cacheList(int k, Object v, long time) {
+    public boolean cacheList(int k, String v, long time) {
         try {
             String key = KEY_PREFIX_LIST + k;
-            ListOperations<String, Object> opsForList = redisTemplate.opsForList();
+            ListOperations opsForList = redisTemplate.opsForList();
             //此处为right push 方法/ 也可以 left push ..
             opsForList.rightPush(key,v);
             if (time > 0){
