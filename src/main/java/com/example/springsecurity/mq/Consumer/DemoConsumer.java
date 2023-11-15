@@ -12,6 +12,6 @@
 //    //监听Demo队列
 //    @RabbitListener(queues = {RabbitConfig.QUEUE_NAME_DEMO})
 //    public void Listen_Demo(Object msg, Message message, Channel channel) {
-//        System.out.println("QUEUE_NAME_DEMO msg is " + msg);
+//        System.out.println("消费者监听到的队列消息是: " + msg);
 //    }
 //}

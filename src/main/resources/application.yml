@@ -1,8 +1,12 @@
 spring:
-#  rabbitmq:
-#    addresses: 43.142.32.223:5673
-#    username: guest
-#    password: guest
+  rabbitmq:
+    addresses: 43.142.32.223:5673
+    username: hiiro
+    password: 136601
+    virtual-host: /test
+#  username: guest
+#  password: guest
+#  virtual-host: /
   redis:
     database: 0
     #DEV

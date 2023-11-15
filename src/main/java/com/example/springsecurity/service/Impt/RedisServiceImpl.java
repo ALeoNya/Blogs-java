@@ -30,11 +30,30 @@ public class RedisServiceImpl implements RedisService {
     private static final String KEY_PREFIX_KEY = "info:bear:key";
     private static final String KEY_PREFIX_SET = "info:bear:set";
     private static final String KEY_PREFIX_LIST = "info:bear:list";
+
     /**
-     * 添加 key:string 缓存
+     * 添加 key:Object 实体类缓存
      */
-    public boolean cacheValue(int k, Object value, long time) {
-        String key = KEY_PREFIX_LIST +k;
+    public boolean cacheValue(String prefix, int key, Object value, long time) {
+        String cachekey = prefix + key;
+        try {
+            ValueOperations ops = redisTemplate.opsForValue();
+            ops.set(cachekey, value);
+            if(time>0) {
+                redisTemplate.expire(cachekey, time, TimeUnit.SECONDS);
+            }
+            return true;
+        } catch (Throwable e) {
+            log.error("缓存存入失败key:[{}] value:[{}]", key, value);
+        }
+        return false;
+    }
+
+    /**
+     * 添加 key:string String缓存
+     */
+    public boolean cacheStringValue(String prefix, int k, String value, long time) {
+        String key = prefix +k;
         try {
             ValueOperations ops = redisTemplate.opsForValue();
             ops.set(key,value);
@@ -49,29 +68,7 @@ public class RedisServiceImpl implements RedisService {
     }
 
     /**
-     * 添加 key:string 缓存
-     */
-    public boolean cacheStringValue(int k, String value, long time) {
-        String key = KEY_PREFIX_KEY +k;
-        try {
-            ValueOperations ops = redisTemplate.opsForValue();
-            ops.set(key,value);
-            if(time>0) {
-                redisTemplate.expire(key,time, TimeUnit.SECONDS);
-            }
-            return true;
-        } catch (Throwable e) {
-            log.error("缓存存入失败key:[{}] value:[{}]", key, value);
-        }
-        return false;
-    }
-
-    /**
-     * list 缓存
-     * @param k key
-     * @param v value
-     * @param time 时间
-     * @return true/false
+     * key:list list缓存
      */
     public boolean cacheList(int k, String v, long time) {
         try {
@@ -85,6 +82,24 @@ public class RedisServiceImpl implements RedisService {
             return true;
         }catch (Throwable e){
             log.error("缓存list失败 当前 key:[{}],失败原因 [{}]", k, e);
+        }
+        return false;
+    }
+
+    /**
+     * key:ArrayList<T> 泛型缓存
+     */
+    public <T> boolean cacheTest(String prefix, int key, ArrayList<T> value, long time) {
+        String cacheKey = prefix + key;
+        try {
+            ValueOperations ops = redisTemplate.opsForValue();
+            ops.set(key, value);
+            if(time>0) {
+                redisTemplate.expire(cacheKey, time, TimeUnit.SECONDS);
+            }
+            return true;
+        } catch (Throwable e) {
+            log.error("缓存存入失败key:[{}] value:[{}]", key, value);
         }
         return false;
     }

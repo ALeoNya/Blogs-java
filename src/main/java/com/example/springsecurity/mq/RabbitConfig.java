@@ -1,50 +1,70 @@
-//package com.example.springsecurity.mq;
-//
-//import org.checkerframework.checker.units.qual.A;
-//import org.springframework.amqp.core.*;
-//import org.springframework.amqp.rabbit.connection.CachingConnectionFactory;
-//import org.springframework.amqp.rabbit.core.RabbitTemplate;
-//import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
-//import org.springframework.beans.factory.annotation.Autowired;
-//import org.springframework.beans.factory.annotation.Qualifier;
-//import org.springframework.context.annotation.Bean;
-//import org.springframework.context.annotation.Configuration;
-//
-//@Configuration
-//public class RabbitConfig {
-//    @Autowired
-//    private CachingConnectionFactory connectionFactory;
-//
-//    public static final String EXCHANGE_NAME_DEMO = "exchange_first_demo";
-//    public static final String QUEUE_NAME_DEMO = "queue_first_demo";
-//    public static final String ROUTINGKEY_DEMO = "routing_demo";
-//
-//    //声明交换机EXCHANGE_NAME_DEMO
-//    @Bean(EXCHANGE_NAME_DEMO)
-//    public Exchange EXCHANGE_TOPICS_INFORM(){
-//        //durable(true) 持久化，mq重启之后交换机还在
-//        return ExchangeBuilder.directExchange(EXCHANGE_NAME_DEMO).durable(true).build();
-//    }
-//
-//    //声明QUEUE_NAME_DEMO队列
-//    @Bean(QUEUE_NAME_DEMO)
-//    public Queue QUEUE_INFORM_EMAIL(){
-//        return new Queue(QUEUE_NAME_DEMO);
-//    }
-//
-//    //QUEUE_NAME_DEMO队列绑定交换机EXCHANGE_NAME_DEMO
+package com.example.springsecurity.mq;
+
+import org.checkerframework.checker.units.qual.A;
+import org.springframework.amqp.core.*;
+import org.springframework.amqp.rabbit.connection.CachingConnectionFactory;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
+import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+
+@Configuration
+public class RabbitConfig {
+    private static String EXCHANGE_NAME = "my_first_exchange";
+    private static String QUEUE_NAME = "my_first_queue";
+    private static String TOPIC_EXCHANGE_NAME = "my_first_topic_exchange";
+    private static String TOPIC_QUEUE_NAME = "my_first_topic_queue";
+
+//    /**
+//     * 声明交换机 fanuot
+//     */
 //    @Bean
-//    public Binding BINDING_QUEUE_EXHANGE_DEMO(@Qualifier(QUEUE_NAME_DEMO) Queue queue,
-//                                              @Qualifier(EXCHANGE_NAME_DEMO) Exchange exchange) {
-//        return BindingBuilder.bind(queue).to(exchange).with(ROUTINGKEY_DEMO).noargs();
+//    public FanoutExchange exchange() {
+//        return new FanoutExchange(EXCHANGE_NAME, true, false);
 //    }
 //
+//
+//
+//    /**
+//     * 声明队列 fanuot
+//     */
 //    @Bean
-//    public RabbitTemplate rabbitTemplate() {
-//        RabbitTemplate rabbitTemplate = new RabbitTemplate(connectionFactory);
-//
-//        rabbitTemplate.setMessageConverter(new Jackson2JsonMessageConverter());
-//        return rabbitTemplate;
+//    public Queue queue() {
+//        return new Queue(QUEUE_NAME, true, false, false);
 //    }
 //
-//}
+//    /**
+//     * 声明交换机和队列的绑定关系 fanuot
+//     */
+//    @Bean
+//    public Binding queueBinding(Queue queue, FanoutExchange fanoutExchange) {
+//        return BindingBuilder.bind(queue).to(fanoutExchange);
+//    }
+
+    /**
+     * 声明队列 Topic
+     */
+    @Bean
+    public Queue topic_queue() {
+        return new Queue(TOPIC_QUEUE_NAME, true, false, false);
+    }
+
+
+    /**
+     * 声明交换机 Topic
+     */
+    @Bean
+    public TopicExchange topic_Exchange() {
+        return new TopicExchange(TOPIC_EXCHANGE_NAME, true, false);
+    }
+
+    /**
+     * 声明交换机和队列的绑定关系 Topic
+     */
+    @Bean
+    public Binding topic_queue_Binding(Queue queue, TopicExchange topicExchange) {
+        return BindingBuilder.bind(queue).to(topicExchange).with("topic.*");
+    }
+}
