@@ -9,9 +9,9 @@ public class firstConsumer {
     /**
      * 监听队列
      */
-    @RabbitListener(queues = "my_first_queue")
-    public void process(Message message) {
-        byte[] body = message.getBody();
-        System.out.println("<<<fanuot>>> [ 接收到的消息为 ] : " + new String(body));
-    }
+//    @RabbitListener(queues = "my_first_queue")
+//    public void process(Message message) {
+//        byte[] body = message.getBody();
+//        System.out.println("<<<fanuot>>> [ 接收到的消息为 ] : " + new String(body));
+//    }
 }

@@ -1,6 +1,7 @@
 package com.example.springsecurity.service.Impt;
 
 import com.example.springsecurity.service.RedisService;
+import com.example.springsecurity.util.redis.config.InitRedis;
 import org.springframework.data.redis.core.ListOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
@@ -103,4 +104,50 @@ public class RedisServiceImpl implements RedisService {
         }
         return false;
     }
+
+    /**
+     * 判断key是否存在
+     * @param key
+     * @return
+     */
+    public boolean containsKey(String key) {
+        try {
+            return redisTemplate.hasKey(key);
+        } catch (Throwable e) {
+            log.error("判断缓存存在失败key:[" + key + "],错误信息 Codeor[{}]", e);
+        }
+        return false;
+    }
+
+    /**
+     * 判断key:resource 是否存在
+     */
+    public boolean containsResourceKey(String key) {
+        return containsKey(InitRedis.KEY_RESOURCE_LIST+key);
+    }
+
+    @Override
+    public boolean containsRoleKey(String key) {
+        return containsKey(InitRedis.KEY_ROLE_LIST+key);
+    }
+
+    @Override
+    public boolean containsRoleResourceKey(String key) {
+        return containsKey(InitRedis.KEY_ROLERESOURCE_LIST+key);
+    }
+
+    @Override
+    public boolean containsUserAuthKey(String key) {
+        return containsKey(InitRedis.KEY_USERAUTH_LIST+key);
+    }
+
+    @Override
+    public boolean containsUserRoleKey(String key) {
+        return containsKey(InitRedis.KEY_USERROLE_LIST+key);
+    }
+
+    /**
+     * 根据key获取缓存
+     */
+
 }

@@ -26,6 +26,5 @@ public class RabbitTest {
     public void RabbitMQ_topic() {
         String message = "Hello Rabbit！";
         rabbitTemplate.convertAndSend("my_first_topic_exchange", "topic.test", message);
-
     }
 }

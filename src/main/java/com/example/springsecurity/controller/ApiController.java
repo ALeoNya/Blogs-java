@@ -1,28 +1,30 @@
 package com.example.springsecurity.controller;
 
-import com.example.springsecurity.pojo.LoginUser;
+import com.alibaba.fastjson.JSONObject;
+import com.example.springsecurity.mq.RabbitConfig;
+import com.example.springsecurity.pojo.Resource;
 import com.example.springsecurity.pojo.Response;
 import com.example.springsecurity.pojo.UserAuth;
 import com.example.springsecurity.response.Code;
 import com.example.springsecurity.response.Msg;
 import com.example.springsecurity.security.service.LoginService;
-import com.example.springsecurity.security.util.SecurityUtil;
-import com.example.springsecurity.util.jwt.JwtUtil;
+import com.example.springsecurity.service.RedisService;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.web.bind.annotation.*;
 
+/**
+ * 一个Controller对应一个Queue
+ */
 @CrossOrigin
 @RestController
 public class ApiController {
     @Autowired
     private LoginService loginService;
+
+    @Autowired
+    private RabbitTemplate rabbitTemplate;
 
     @PostMapping("/user/login")
     public Response login(@RequestBody UserAuth user){
@@ -30,14 +32,30 @@ public class ApiController {
     }
 
     @GetMapping("/hello")
-//    @PreAuthorize("hasAuthority('/article/addArticle')")
     public String hello(){
         return "hello";
     }
 
+    @PostMapping("/helloRabbitMQ")
+    public String RabbitMQ_Pro(@RequestBody UserAuth user){
+        rabbitTemplate.convertAndSend(RabbitConfig.TOPIC_EXCHANGE_NAME, "topic.demo", JSONObject.toJSONString(user));
+        return "[ RabbitMQ_Pro 生产成功 ]";
+    }
+
+    @PostMapping("/helloRabbitMQ2")
+    public String RabbitMQ_Pro2(@RequestBody UserAuth user){
+        rabbitTemplate.convertAndSend("my_first_topic_exchange", "topic.demo2", JSONObject.toJSONString(user));
+        return "[ RabbitMQ_Pro2 生产成功 ]";
+    }
+
+    @PostMapping("/helloRabbitMQ3")
+    public String RabbitMQ_Pro3(@RequestBody UserAuth user){
+        rabbitTemplate.convertAndSend("my_first_topic_exchange", "topic.aaa", JSONObject.toJSONString(user));
+        return "[ RabbitMQ_Pro3 生产成功 ]";
+    }
+
     @GetMapping("/article/addArticle")
     @PreAuthorize("hasAuthority('/article/addArticle')")  //权限颗粒度
-//    @PreAuthorize("hasAnyAuthority('admin','test','system:dept:list')")
     public Response addArticle() {
         return new Response(Code.SUCCESS, Msg.ADD_SUCCESS_MSG, "addArticle");
     }
@@ -61,5 +79,15 @@ public class ApiController {
     @PreAuthorize("hasAnyAuthority('/article/updateArticle')")
     public Response updateArticle() {
         return new Response(Code.SUCCESS, Msg.ADD_SUCCESS_MSG, "updateArticle");
+    }
+
+    /**
+     * Redis测数
+     */
+    @Autowired
+    private RedisService redisService;
+    @PostMapping("/helloRedis")
+    public boolean RedisTest(@RequestBody Resource resource){
+        return redisService.containsResourceKey(String.valueOf(resource.getId()));
     }
 }

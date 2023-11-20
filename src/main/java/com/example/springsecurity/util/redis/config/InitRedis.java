@@ -28,11 +28,11 @@ public class InitRedis {
     @Autowired
     private RedisService redisService;
 
-    private static final String KEY_USERAUTH_LIST = "DB:k_user_auth:userAuth";
-    private static final String KEY_USERROLE_LIST = "DB:k_user_role:userRole";
-    private static final String KEY_ROLE_LIST = "DB:k_role:role";
-    private static final String KEY_ROLERESOURCE_LIST = "DB:k_role_resource:roleResource";
-    private static final String KEY_RESOURCE_LIST = "DB:k_resource:resource";
+    public static final String KEY_USERAUTH_LIST = "DB:k_user_auth:userAuth";
+    public static final String KEY_USERROLE_LIST = "DB:k_user_role:userRole";
+    public static final String KEY_ROLE_LIST = "DB:k_role:role";
+    public static final String KEY_ROLERESOURCE_LIST = "DB:k_role_resource:roleResource";
+    public static final String KEY_RESOURCE_LIST = "DB:k_resource:resource";
     @PostConstruct  //springboot初始化后自动执行
     public void initRedis() {
         /**

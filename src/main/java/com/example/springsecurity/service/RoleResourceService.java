@@ -13,12 +13,5 @@ public interface RoleResourceService {
      */
     List<RoleResource> getPermission(int role_id);
 
-    /**
-     * 保存角色权限
-     *
-     * @param roleId 角色id
-     * @param menus 权限表
-     * @return 是否成功
-     */
-//    Boolean savePermission(Long roleId,Set<Long> menus);
+    RoleResource getRoleResource(RoleResource roleResource);
 }
