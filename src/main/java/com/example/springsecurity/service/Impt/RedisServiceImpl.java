@@ -1,5 +1,6 @@
 package com.example.springsecurity.service.Impt;
 
+import com.example.springsecurity.pojo.UserAuth;
 import com.example.springsecurity.service.RedisService;
 import com.example.springsecurity.util.redis.config.InitRedis;
 import org.springframework.data.redis.core.ListOperations;
@@ -149,5 +150,7 @@ public class RedisServiceImpl implements RedisService {
     /**
      * 根据key获取缓存
      */
-
+    public UserAuth getUserAuth(String key) {
+        return (UserAuth) redisTemplate.opsForValue().get(InitRedis.KEY_USERAUTH_LIST+key);
+    }
 }

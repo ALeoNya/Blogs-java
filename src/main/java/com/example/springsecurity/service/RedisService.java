@@ -1,5 +1,7 @@
 package com.example.springsecurity.service;
 
+import com.example.springsecurity.pojo.UserAuth;
+
 import java.util.ArrayList;
 
 public interface RedisService {
@@ -28,5 +30,5 @@ public interface RedisService {
     /**
      * 获取存在的缓存
      */
-
+    public UserAuth getUserAuth(String key);
 }

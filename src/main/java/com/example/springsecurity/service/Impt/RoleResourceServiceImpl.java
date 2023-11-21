@@ -21,7 +21,7 @@ public class RoleResourceServiceImpl implements RoleResourceService {
     @Override
     public RoleResource getRoleResource(RoleResource roleResource) {
         if(redisService.containsRoleResourceKey(String.valueOf(roleResource.getId()))) {
-             redisService
+//             redisService
         }
         return null;
     }

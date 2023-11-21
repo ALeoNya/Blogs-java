@@ -1,6 +1,7 @@
 package com.example.springsecurity.controller;
 
 import com.alibaba.fastjson.JSONObject;
+import com.example.springsecurity.mapper.UserAuthMapper;
 import com.example.springsecurity.mq.RabbitConfig;
 import com.example.springsecurity.pojo.Resource;
 import com.example.springsecurity.pojo.Response;
@@ -13,6 +14,8 @@ import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+
+import static com.example.springsecurity.util.redis.config.InitRedis.KEY_USERAUTH_LIST;
 
 /**
  * 一个Controller对应一个Queue
