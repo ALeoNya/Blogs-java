@@ -10,6 +10,7 @@ import com.example.springsecurity.response.Code;
 import com.example.springsecurity.response.Msg;
 import com.example.springsecurity.security.service.LoginService;
 import com.example.springsecurity.service.RedisService;
+import com.example.springsecurity.util.redis.config.InitRedis;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -91,6 +92,6 @@ public class ApiController {
     private RedisService redisService;
     @PostMapping("/helloRedis")
     public boolean RedisTest(@RequestBody Resource resource){
-        return redisService.containsResourceKey(String.valueOf(resource.getId()));
+        return redisService.containsKey(InitRedis.KEY_RESOURCE_LIST, String.valueOf(resource.getId()));
     }
 }

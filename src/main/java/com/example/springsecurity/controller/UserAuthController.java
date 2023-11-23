@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.concurrent.TimeUnit;
+
 import static com.example.springsecurity.util.redis.config.InitRedis.KEY_USERAUTH_LIST;
 
 @CrossOrigin
@@ -35,10 +37,8 @@ public class UserAuthController {
     @PostMapping("/getUserAuth")
     public Response getUserAuth(@RequestBody UserAuth userAuth) {
         try {
-//            UserAuth userAuth = new UserAuth();
-//            userAuth.setId(2);
             //if(redis查询结果){true:返回redis查询到的结果}
-            if(redisService.containsUserAuthKey(String.valueOf(userAuth.getId()))) {
+            if (redisService.containsKey(KEY_USERAUTH_LIST, String.valueOf(userAuth.getId()))) {
                 return new Response(Code.SUCCESS, Msg.ADD_SUCCESS_MSG, redisService.getUserAuth(String.valueOf(userAuth.getId())));
             }
             //为false:查询数据库并且添加到reids中，若数据库也为空则把查询值和空值添加到redis中
@@ -46,6 +46,38 @@ public class UserAuthController {
             return new Response(Code.SUCCESS, Msg.ADD_SUCCESS_MSG, userAuth);
         } catch (Exception e) {
             return new Response(Code.FAILED, Msg.ACCESS_DENIED_MSG, e);
+        }
+    }
+
+    @PostMapping("/updateUserAuth")
+    public Response updateUserAuth(@RequestBody UserAuth userAuth) {
+        try {
+            //if(redis查询结果){false:返回不存在该用户}
+            if (!redisService.containsKey(KEY_USERAUTH_LIST, String.valueOf(userAuth.getId()))) {
+                return new Response(Code.FAILED, Msg.ACCESS_DENIED_MSG, "不存在该用户");
+            }
+            //true:对数据库进行更新操作，对redis数据进行过期处理(延时双删
+            redisService.expire(KEY_USERAUTH_LIST, String.valueOf(userAuth.getId()), 3, TimeUnit.SECONDS);
+            userAuthMapper.updateById(userAuth);
+            return new Response(Code.SUCCESS, Msg.ADD_SUCCESS_MSG, userAuth);
+        } catch (Exception e) {
+            return new Response(Code.FAILED, Msg.ACCESS_DENIED_MSG, e);
+        }
+    }
+
+    @PostMapping("/deleteUserAuth")
+    public Response deleteUserAuth(@RequestBody UserAuth userAuth) {
+        try {
+//            if(redis查询结果){false:返回不存在该用户}
+            if (!redisService.containsKey(KEY_USERAUTH_LIST, String.valueOf(userAuth.getId()))) {
+                return new Response(Code.FAILED, Msg.DEL_FAIL_MSG, "不存在该用户");
+            }
+            //true:对数据库删除操作，对redis数据进行过期处理
+            redisService.expire(KEY_USERAUTH_LIST, String.valueOf(userAuth.getId()), 3, TimeUnit.SECONDS);
+            userAuthMapper.deleteById(userAuth);
+            return new Response(Code.SUCCESS, Msg.DEL_SUCCESS_MSG, userAuth);
+        } catch (Exception e) {
+            return new Response(Code.FAILED, Msg.DEL_FAIL_MSG, e);
         }
     }
 }

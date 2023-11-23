@@ -3,6 +3,7 @@ package com.example.springsecurity.service;
 import com.example.springsecurity.pojo.UserAuth;
 
 import java.util.ArrayList;
+import java.util.concurrent.TimeUnit;
 
 public interface RedisService {
     /**
@@ -20,15 +21,20 @@ public interface RedisService {
      * 判断缓存是否存在
      */
     //泛型
-    public boolean containsKey(String key);
-    //多态（对应不同的实体类
-    public boolean containsResourceKey(String key);
-    public boolean containsRoleKey(String key);
-    public boolean containsRoleResourceKey(String key);
-    public boolean containsUserAuthKey(String key);
-    public boolean containsUserRoleKey(String key);
+    public boolean containsKey(String prefix, String key);
+
     /**
      * 获取存在的缓存
      */
     public UserAuth getUserAuth(String key);
+
+    /**
+     * 过期处理
+     */
+    public boolean expire(String prefix, String k, long timeout, TimeUnit unit);
+
+    /**
+     * 删除缓存(考虑并发问题
+     */
+    public boolean removeByKey(String prefix, String k);
 }

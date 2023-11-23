@@ -108,43 +108,16 @@ public class RedisServiceImpl implements RedisService {
 
     /**
      * 判断key是否存在
-     * @param key
-     * @return
      */
-    public boolean containsKey(String key) {
+    public boolean containsKey(String prefix, String k) {
+        String key = null;
         try {
+            key = prefix + k;
             return redisTemplate.hasKey(key);
         } catch (Throwable e) {
-            log.error("判断缓存存在失败key:[" + key + "],错误信息 Codeor[{}]", e);
+            log.error("判断缓存存在失败key:[{}],错误信息 Codeor[{}]", key, e);
         }
         return false;
-    }
-
-    /**
-     * 判断key:resource 是否存在
-     */
-    public boolean containsResourceKey(String key) {
-        return containsKey(InitRedis.KEY_RESOURCE_LIST+key);
-    }
-
-    @Override
-    public boolean containsRoleKey(String key) {
-        return containsKey(InitRedis.KEY_ROLE_LIST+key);
-    }
-
-    @Override
-    public boolean containsRoleResourceKey(String key) {
-        return containsKey(InitRedis.KEY_ROLERESOURCE_LIST+key);
-    }
-
-    @Override
-    public boolean containsUserAuthKey(String key) {
-        return containsKey(InitRedis.KEY_USERAUTH_LIST+key);
-    }
-
-    @Override
-    public boolean containsUserRoleKey(String key) {
-        return containsKey(InitRedis.KEY_USERROLE_LIST+key);
     }
 
     /**
@@ -152,5 +125,33 @@ public class RedisServiceImpl implements RedisService {
      */
     public UserAuth getUserAuth(String key) {
         return (UserAuth) redisTemplate.opsForValue().get(InitRedis.KEY_USERAUTH_LIST+key);
+    }
+
+    /**
+     * 设置key的过期时间
+     */
+    public boolean expire(String prefix, String k, long timeout, TimeUnit unit) {
+        try {
+            String key = prefix + k;
+            redisTemplate.expire(key, timeout, unit);
+            return true;
+        }catch (Throwable e){
+            log.error("移除list缓存失败 key[" + prefix + k + "], Codeor[" + e + "]");
+        }
+        return false;
+    }
+
+    /**
+     * 根据 key 移除缓存
+     */
+    public boolean removeByKey(String prefix, String k) {
+        try {
+            String key = prefix + k;
+            redisTemplate.delete(key);
+            return true;
+        }catch (Throwable e){
+            log.error("移除list缓存失败 key[" + prefix + k + "], Codeor[" + e + "]");
+        }
+        return false;
     }
 }
