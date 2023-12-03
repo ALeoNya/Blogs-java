@@ -1,21 +1,21 @@
-package com.example.springsecurity.service.Impt;
+package com.example.springsecurity.util.redis.service.Impl;
 
-import com.example.springsecurity.pojo.UserAuth;
-import com.example.springsecurity.service.RedisService;
+import com.example.springsecurity.pojo.*;
+import com.example.springsecurity.util.redis.service.RedisService;
 import com.example.springsecurity.util.redis.config.InitRedis;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.ListOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import javax.annotation.Resource;
 
 import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
-
-import static jdk.nashorn.internal.runtime.regexp.joni.Config.log;
 
 @Service("RedisService")
 public class RedisServiceImpl implements RedisService {
@@ -26,7 +26,7 @@ public class RedisServiceImpl implements RedisService {
      *  String key:List<String> list    key:list集合
      */
     private final Logger log = LoggerFactory.getLogger(this.getClass());
-    @Resource
+    @Autowired
     private RedisTemplate redisTemplate;
 
     private static final String KEY_PREFIX_KEY = "info:bear:key";
@@ -109,7 +109,7 @@ public class RedisServiceImpl implements RedisService {
     /**
      * 判断key是否存在
      */
-    public boolean containsKey(String prefix, String k) {
+    public boolean containsKey(String prefix, int k) {
         String key = null;
         try {
             key = prefix + k;
@@ -121,16 +121,59 @@ public class RedisServiceImpl implements RedisService {
     }
 
     /**
-     * 根据key获取缓存
+     *
+     * @param prefix
+     * @return
      */
-    public UserAuth getUserAuth(String key) {
-        return (UserAuth) redisTemplate.opsForValue().get(InitRedis.KEY_USERAUTH_LIST+key);
+    public Map<String, ?> allCache(String prefix) {
+        Map<String, Object> redisData = new HashMap<>();
+        Set<String> keys = redisTemplate.keys(prefix+"*");
+        for (String key : keys) {
+            redisData.put(key, redisTemplate.opsForValue().get(key));
+        }
+        return redisData;
     }
 
     /**
-     * 设置key的过期时间
+     * 根据key获取缓存
      */
-    public boolean expire(String prefix, String k, long timeout, TimeUnit unit) {
+    //UserAuth
+    public UserAuth getUserAuth(String key) {
+        return (UserAuth) redisTemplate.opsForValue().get(InitRedis.KEY_USERAUTH_LIST+key);
+    }
+    //Article
+    public Article getArticle(Article article) {
+        return (Article) redisTemplate.opsForValue().get(InitRedis.KEY_ARTICLE_LIST+article.getId());
+    }
+
+    public Resource getResource(Resource resource) {
+        return (Resource) redisTemplate.opsForValue().get(InitRedis.KEY_RESOURCE_LIST+resource.getId());
+    }
+
+    public Role getRole(Role role) {
+        return (Role) redisTemplate.opsForValue().get(InitRedis.KEY_ROLE_LIST+role.getId());
+    }
+
+    @Override
+    public RoleResource getRoleResource(RoleResource roleResource) {
+        return (RoleResource) redisTemplate.opsForValue().get(InitRedis.KEY_ROLERESOURCE_LIST + roleResource.getId());
+    }
+
+    @Override
+    public UserRole getUserRole(UserRole userRole) {
+        return (UserRole) redisTemplate.opsForValue().get(InitRedis.KEY_USERROLE_LIST + userRole.getId());
+    }
+
+    @Override
+    public <T> T getObject(String prefix, int k) {
+        return (T) redisTemplate.opsForValue().get(prefix + k);
+    }
+
+
+    /**
+     * 设置key的过期时间N
+     */
+    public boolean expire(String prefix, int k, long timeout, TimeUnit unit) {
         try {
             String key = prefix + k;
             redisTemplate.expire(key, timeout, unit);

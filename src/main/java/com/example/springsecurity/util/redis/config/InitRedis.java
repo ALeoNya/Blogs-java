@@ -1,9 +1,7 @@
 package com.example.springsecurity.util.redis.config;
 
 import com.example.springsecurity.mapper.*;
-import com.example.springsecurity.pojo.UserAuth;
-import com.example.springsecurity.pojo.UserRole;
-import com.example.springsecurity.service.RedisService;
+import com.example.springsecurity.util.redis.service.RedisService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -33,6 +31,10 @@ public class InitRedis {
     public static final String KEY_ROLE_LIST = "DB:k_role:role";
     public static final String KEY_ROLERESOURCE_LIST = "DB:k_role_resource:roleResource";
     public static final String KEY_RESOURCE_LIST = "DB:k_resource:resource";
+    public static final String KEY_ARTICLE_LIST = "DB:k_article:article";
+    public static final String KEY_ARTICLETAG_LIST = "DB:k_articleTag:articleTag";
+    public static final String KEY_CATEGORY_LIST = "DB:k_category:category";
+    public static final String KEY_TAG_LIST = "DB:k_tag:tag";
     @PostConstruct  //springboot初始化后自动执行
     public void initRedis() {
         /**

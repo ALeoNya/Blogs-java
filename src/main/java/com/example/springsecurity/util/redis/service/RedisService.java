@@ -1,8 +1,9 @@
-package com.example.springsecurity.service;
+package com.example.springsecurity.util.redis.service;
 
-import com.example.springsecurity.pojo.UserAuth;
+import com.example.springsecurity.pojo.*;
 
 import java.util.ArrayList;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 public interface RedisService {
@@ -21,17 +22,29 @@ public interface RedisService {
      * 判断缓存是否存在
      */
     //泛型
-    public boolean containsKey(String prefix, String key);
+    public boolean containsKey(String prefix, int key);
+
+    /**
+     * 获取同前缀的所有的缓存
+     * @param prefix
+     * @return
+     */
+    public Map<String, ?> allCache(String prefix);
 
     /**
      * 获取存在的缓存
      */
     public UserAuth getUserAuth(String key);
-
+    public Article getArticle(Article article);
+    public Resource getResource(Resource resource);
+    public Role getRole(Role role);
+    public RoleResource getRoleResource(RoleResource roleResource);
+    public UserRole getUserRole(UserRole userRole);
+    public <T> T getObject(String prefix, int k);
     /**
      * 过期处理
      */
-    public boolean expire(String prefix, String k, long timeout, TimeUnit unit);
+    public boolean expire(String prefix, int k, long timeout, TimeUnit unit);
 
     /**
      * 删除缓存(考虑并发问题

@@ -1,18 +1,15 @@
 package com.example.springsecurity;
 
-import com.example.springsecurity.pojo.Article;
+import com.example.springsecurity.pojo.Resource;
 import com.example.springsecurity.pojo.UserAuth;
-import com.example.springsecurity.service.RedisService;
+import com.example.springsecurity.util.redis.service.RedisService;
 import com.example.springsecurity.util.redis.config.InitRedis;
-import org.checkerframework.checker.units.qual.A;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.redis.core.RedisTemplate;
 
 import java.util.concurrent.TimeUnit;
-
-import static com.example.springsecurity.util.redis.config.InitRedis.KEY_USERAUTH_LIST;
 
 @SpringBootTest
 public class RedisTest {
@@ -28,8 +25,8 @@ public class RedisTest {
     @Test
     public void test() {
         UserAuth userAuth = new UserAuth();
-        userAuth.setId(2);
-        System.out.println(redisService.containsKey(InitRedis.KEY_USERAUTH_LIST, String.valueOf(userAuth.getId())));
+        userAuth.setId(1);
+        System.out.println(redisService.containsKey(InitRedis.KEY_USERAUTH_LIST, userAuth.getId()));
 //        System.out.println(redisService.containsKey(KEY_USERAUTH_LIST, String.valueOf(userAuth.getId())));
     }
 
@@ -44,6 +41,23 @@ public class RedisTest {
     public void Expire() {
         UserAuth userAuth = new UserAuth();
         userAuth.setId(3);
-        redisService.expire(InitRedis.KEY_USERAUTH_LIST, String.valueOf(userAuth.getId()),  5, TimeUnit.SECONDS);
+        redisService.expire(InitRedis.KEY_USERAUTH_LIST,userAuth.getId(),  5, TimeUnit.SECONDS);
+    }
+
+    @Test
+    public void allCache() {
+        String prefix = "DB:k_user_auth";
+        String prefix2 = InitRedis.KEY_RESOURCE_LIST;
+        System.out.println(redisService.allCache(prefix2));
+    }
+
+    @Test
+    public void getObject() {
+        int k = 1;
+        Resource   resource = redisService.getObject(InitRedis.KEY_RESOURCE_LIST , k);
+        System.out.println(resource);
+        if(redisService.getObject(InitRedis.KEY_RESOURCE_LIST , k) == null) {
+            System.out.println("Object is null");
+        }
     }
 }

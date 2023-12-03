@@ -1,7 +1,6 @@
 package com.example.springsecurity.controller;
 
 import com.alibaba.fastjson.JSONObject;
-import com.example.springsecurity.mapper.UserAuthMapper;
 import com.example.springsecurity.mq.RabbitConfig;
 import com.example.springsecurity.pojo.Resource;
 import com.example.springsecurity.pojo.Response;
@@ -9,14 +8,12 @@ import com.example.springsecurity.pojo.UserAuth;
 import com.example.springsecurity.response.Code;
 import com.example.springsecurity.response.Msg;
 import com.example.springsecurity.security.service.LoginService;
-import com.example.springsecurity.service.RedisService;
+import com.example.springsecurity.util.redis.service.RedisService;
 import com.example.springsecurity.util.redis.config.InitRedis;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-
-import static com.example.springsecurity.util.redis.config.InitRedis.KEY_USERAUTH_LIST;
 
 /**
  * 一个Controller对应一个Queue
@@ -92,6 +89,6 @@ public class ApiController {
     private RedisService redisService;
     @PostMapping("/helloRedis")
     public boolean RedisTest(@RequestBody Resource resource){
-        return redisService.containsKey(InitRedis.KEY_RESOURCE_LIST, String.valueOf(resource.getId()));
+        return redisService.containsKey(InitRedis.KEY_RESOURCE_LIST, resource.getId());
     }
 }
