@@ -1,6 +1,9 @@
 package com.example.springsecurity.util.redis.config;
 
 import com.example.springsecurity.mapper.*;
+import com.example.springsecurity.pojo.Article;
+import com.example.springsecurity.pojo.Category;
+import com.example.springsecurity.service.*;
 import com.example.springsecurity.util.redis.service.RedisService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
@@ -14,18 +17,27 @@ public class InitRedis {
     @Autowired
     private UserRoleMapper userRoleMapper;
     @Autowired
+    private UserInfoMapper userInfoMapper;
+    @Autowired
     private RoleMapper roleMapper;
     @Autowired
     private RoleResourceMapper roleResourceMapper;
     @Autowired
     private ResourceMapper resourceMapper;
-
+    @Autowired
+    private CategoryMapper categoryMapper;
+    @Autowired
+    private TagMapper tagMapper;
+    @Autowired
+    private ArticleTagMapper articleTagMapper;
+    @Autowired
+    private ArticleMapper articleMapper;
     @Autowired
     private RedisTemplate redisTemplate;
-
     @Autowired
     private RedisService redisService;
 
+    public static final String KEY_USERINFO_LIST = "DB:k_user_Info:userInfo";
     public static final String KEY_USERAUTH_LIST = "DB:k_user_auth:userAuth";
     public static final String KEY_USERROLE_LIST = "DB:k_user_role:userRole";
     public static final String KEY_ROLE_LIST = "DB:k_role:role";
@@ -45,20 +57,36 @@ public class InitRedis {
 //            int time = 3600000;
 //            redisService.cacheValue(list.get(i).getId(), list.get(i), time);
 //        }
+        userInfoMapper.selectList(null)
+                .stream()
+                .forEach(userInfo -> redisService.cacheValue(KEY_USERINFO_LIST, userInfo.getId(), userInfo, 3600));
         userAuthMapper.selectList(null)
                 .stream()
-                .forEach(userAuth -> redisService.cacheValue(KEY_USERAUTH_LIST, userAuth.getId(), userAuth, 3600000));
+                .forEach(userAuth -> redisService.cacheValue(KEY_USERAUTH_LIST, userAuth.getId(), userAuth, 3600));
         userRoleMapper.selectList(null)
                 .stream()
-                .forEach(userRole -> redisService.cacheValue(KEY_USERROLE_LIST, userRole.getId(), userRole, 3600000));
+                .forEach(userRole -> redisService.cacheValue(KEY_USERROLE_LIST, userRole.getId(), userRole, 3600));
         roleMapper.selectList(null)
                 .stream()
-                .forEach(role-> redisService.cacheValue(KEY_ROLE_LIST, role.getId(), role, 3600000));
+                .forEach(role-> redisService.cacheValue(KEY_ROLE_LIST, role.getId(), role, 3600));
         roleResourceMapper.selectList(null)
                 .stream()
-                .forEach(roleResource -> redisService.cacheValue(KEY_ROLERESOURCE_LIST, roleResource.getId(), roleResource, 3600000));
+                .forEach(roleResource -> redisService.cacheValue(KEY_ROLERESOURCE_LIST, roleResource.getId(), roleResource, 3600));
         resourceMapper.selectList(null)
                 .stream()
-                .forEach(resource -> redisService.cacheValue(KEY_RESOURCE_LIST, resource.getId(), resource, 3600000));
+                .forEach(resource -> redisService.cacheValue(KEY_RESOURCE_LIST, resource.getId(), resource, 3600));
+        categoryMapper.selectList(null)
+                .stream()
+                .forEach(category -> redisService.cacheValue(KEY_CATEGORY_LIST, category.getId(), category, 3600));
+        tagMapper.selectList(null)
+                .stream()
+                .forEach(tag -> redisService.cacheValue(KEY_TAG_LIST, tag.getId(), tag, 3600));
+        articleTagMapper.selectList(null)
+                .stream()
+                .forEach(articleTag -> redisService.cacheValue(KEY_ARTICLETAG_LIST, articleTag.getId(), articleTag, 3600));
+        articleMapper.selectList(null)
+                .stream()
+                .forEach(article -> redisService.cacheValue(KEY_ARTICLE_LIST, article.getId(), article, 3600));
+
     }
 }
