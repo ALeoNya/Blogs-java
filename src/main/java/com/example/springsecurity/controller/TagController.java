@@ -7,6 +7,7 @@ import com.example.springsecurity.service.UserInfoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -20,22 +21,22 @@ public class TagController {
     }
 
     @PostMapping("/delTag")
-    public Response delTag(Tag Tag) {
+    public Response delTag(@RequestBody Tag Tag) {
         return tagService.delTag(Tag);
     }
 
     @PostMapping("/selTagById")
-    public Response selTagById(Tag Tag) {
+    public Response selTagById(@RequestBody Tag Tag) {
         return tagService.selTagById(Tag);
     }
 
     @PostMapping("/allTag")
-    public Response allTag(Tag Tag) {
+    public Response allTag(@RequestBody Tag Tag) {
         return tagService.allTag(Tag);
     }
 
     @PostMapping("/updTag")
-    public Response updTag(Tag Tag) {
+    public Response updTag(@RequestBody Tag Tag) {
         return tagService .updTag(Tag);
     }
 }

@@ -63,7 +63,6 @@ public class CategoryServiceImpl implements CategoryService {
                 }
                 return new Response(Code.SUCCESS, Msg.SEL_SUCCESS_MSG, redisService.getObject(InitRedis.KEY_CATEGORY_LIST, key));
             }
-
         } catch (RuntimeException e) {
             return new Response(Code.FAILED, Msg.SEL_FAIL_MSG, e);
         }

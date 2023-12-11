@@ -65,10 +65,11 @@ public class RoleServiceImpl implements RoleService {
             } else {
                 Role get = roleMapper.selectById(key);
                 //查到null值缓存到redis设置过期时间为6min
-                redisService.cacheValue(InitRedis.KEY_ROLE_LIST, key, get, 360);
                 if(get == null) {
+                    redisService.cacheValue(InitRedis.KEY_ROLE_LIST, key, get, 360);
                     return new Response(Code.FAILED, Msg.SEL_FAIL_MSG, "你查询的是一个空值");
                 }
+                redisService.cacheValue(InitRedis.KEY_ROLE_LIST, key, get, 3600);
                 return new Response(Code.SUCCESS, Msg.SEL_SUCCESS_MSG, redisService.getRole(role));
             }
 

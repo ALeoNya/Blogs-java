@@ -6,6 +6,4 @@ import com.example.springsecurity.pojo.Role;
 import org.apache.ibatis.annotations.Mapper;
 
 @Mapper
-public interface ArticleTagMapper extends BaseMapper<ArticleTag> {
-
-}
+public interface ArticleTagMapper extends BaseMapper<ArticleTag> {}

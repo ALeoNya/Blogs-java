@@ -10,6 +10,7 @@ import com.example.springsecurity.util.redis.config.InitRedis;
 import com.example.springsecurity.util.redis.service.RedisService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.concurrent.TimeUnit;
 
@@ -52,17 +53,19 @@ public class ArticleTagServiceImpl implements ArticleTagService {
         int key = articleTag.getId();
         try {
             if(redisService.containsKey(InitRedis.KEY_ARTICLETAG_LIST, key)) {
+                //判断Redis存在，true返回Redis查询结果
                 return new Response(Code.SUCCESS, Msg.SEL_SUCCESS_MSG, redisService.getObject(InitRedis.KEY_ARTICLETAG_LIST, key));
             } else {
+                //false,从DB存入Redis
                 ArticleTag get = articleTagMapper.selectById(key);
-                //查到null值缓存到redis设置过期时间为6min
-                redisService.cacheValue(InitRedis.KEY_ARTICLETAG_LIST, key, get, 360);
                 if(get == null) {
+                    //查到null值缓存到redis设置过期时间为6min
+                    redisService.cacheValue(InitRedis.KEY_ARTICLETAG_LIST, key, get, 360);
                     return new Response(Code.FAILED, Msg.SEL_FAIL_MSG, "你查询的是一个空值");
                 }
+                redisService.cacheValue(InitRedis.KEY_ARTICLETAG_LIST, key, get, 3600);
                 return new Response(Code.SUCCESS, Msg.SEL_SUCCESS_MSG, redisService.getObject(InitRedis.KEY_ARTICLETAG_LIST, key));
             }
-
         } catch (RuntimeException e) {
             return new Response(Code.FAILED, Msg.SEL_FAIL_MSG, e);
         }
@@ -81,6 +84,7 @@ public class ArticleTagServiceImpl implements ArticleTagService {
     public Response updArticleTag(ArticleTag articleTag) {
         int key = articleTag.getId();
         try {
+            //过期后更新DB
             redisService.expire(InitRedis.KEY_ARTICLETAG_LIST, key, 3, TimeUnit.SECONDS);
             articleTagMapper.updateById(articleTag);
             return new Response(Code.SUCCESS, Msg.UPD_SUCCESS_MSG, redisService.getObject(InitRedis.KEY_ARTICLETAG_LIST, key));

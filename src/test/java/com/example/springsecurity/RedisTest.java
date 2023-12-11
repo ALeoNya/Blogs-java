@@ -1,7 +1,10 @@
 package com.example.springsecurity;
 
+import com.example.springsecurity.pojo.ArticleTag;
 import com.example.springsecurity.pojo.Resource;
+import com.example.springsecurity.pojo.Response;
 import com.example.springsecurity.pojo.UserAuth;
+import com.example.springsecurity.service.ArticleTagService;
 import com.example.springsecurity.util.redis.service.RedisService;
 import com.example.springsecurity.util.redis.config.InitRedis;
 import org.junit.jupiter.api.Test;
@@ -54,10 +57,19 @@ public class RedisTest {
     @Test
     public void getObject() {
         int k = 1;
-        Resource   resource = redisService.getObject(InitRedis.KEY_RESOURCE_LIST , k);
+        Resource resource = redisService.getObject(InitRedis.KEY_RESOURCE_LIST , k);
         System.out.println(resource);
         if(redisService.getObject(InitRedis.KEY_RESOURCE_LIST , k) == null) {
             System.out.println("Object is null");
         }
+    }
+
+    @Autowired
+    private ArticleTagService articleTagService;
+    @Test
+    public void selArticleTagById() {
+        ArticleTag articleTag = new ArticleTag();
+        articleTag.setId(1);
+        articleTagService.selArticleTagById(articleTag);
     }
 }

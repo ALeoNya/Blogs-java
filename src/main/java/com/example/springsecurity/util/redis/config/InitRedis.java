@@ -87,6 +87,5 @@ public class InitRedis {
         articleMapper.selectList(null)
                 .stream()
                 .forEach(article -> redisService.cacheValue(KEY_ARTICLE_LIST, article.getId(), article, 3600));
-
     }
 }
