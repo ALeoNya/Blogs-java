@@ -1,22 +1,17 @@
 package com.example.springsecurity.security;
 
 import com.example.springsecurity.filter.JwtAuthenticationTokenFilter;
-import com.example.springsecurity.security.util.MyAuthenticationEntryPoint;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import javax.servlet.ServletException;
@@ -31,8 +26,8 @@ public class SecurityConfig {
     //授权（过滤器
 //    @Autowired
 //    MyAuthenticationFailureHandler myAuthenticationFailureHandler;
-    @Autowired
-    MyAuthenticationEntryPoint AuthenticationEntryPoint;
+//    @Autowired
+//    MyAuthenticationEntryPoint AuthenticationEntryPoint;
     @Autowired
     JwtAuthenticationTokenFilter jwtAuthenticationTokenFilter;
     @Autowired
@@ -85,13 +80,6 @@ public class SecurityConfig {
         return auth;
     }
 }
-
-/**
- * 登陆
- * 成功跳转主页
- * 失败返回json数据给前端，前端选择显示json中的报错信息？or直接使用前端的报错信息？
- */
-
 
 
 

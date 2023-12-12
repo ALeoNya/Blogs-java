@@ -38,9 +38,9 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         }
         System.out.println(user.getId());
         //TODO 根据用户查询权限信息 添加到LoginUser中
-        List<String> permissionKeyList =  roleResourceMapper.listPermsByUserId(user.getId());
+        List<String> permissionKeyList = roleResourceMapper.listPermsByUserId(user.getId());
         System.out.println(permissionKeyList);
-        //封装成UserDetails对象返回
+        //封装成UserDetails对象返回给AuthtenticationManager
         return new LoginUser(user,permissionKeyList);
     }
 }
