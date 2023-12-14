@@ -31,9 +31,9 @@ public class LoginServiceImpl implements LoginService {
         try {
             UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(user.getUsername(),user.getPassword());
             Authentication authenticate = authenticationManager.authenticate(authenticationToken);
-//            if(Objects.isNull(authenticate)){
-//                return new Response(416,"任务代号4-1-7","...登录失败");
-//            }
+            if(Objects.isNull(authenticate)){
+                return new Response(416,"任务代号4-1-7","...登录失败");
+            }
             //使用userid生成token
             LoginUser loginUser = (LoginUser) authenticate.getPrincipal();
             String userId = loginUser.getUser().getId().toString();

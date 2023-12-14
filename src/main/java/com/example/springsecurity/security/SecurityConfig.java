@@ -14,11 +14,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-
 @Configuration
 @EnableGlobalMethodSecurity(prePostEnabled = true)  //细粒度控制
 public class SecurityConfig {
@@ -30,6 +25,7 @@ public class SecurityConfig {
 //    MyAuthenticationEntryPoint AuthenticationEntryPoint;
     @Autowired
     JwtAuthenticationTokenFilter jwtAuthenticationTokenFilter;
+
     @Autowired
     AccessDeniedHandlerImpl accessDeniedHandler;
     @Bean
@@ -46,8 +42,8 @@ public class SecurityConfig {
 //                .and()
 //                .formLogin()  //开启表单验证
 //                .permitAll();
-
         //TOKEN Filter
+//        http.addFilterBefore(test,UsernamePasswordAuthenticationFilter.class);
         http.addFilterBefore(jwtAuthenticationTokenFilter,UsernamePasswordAuthenticationFilter.class);
 
         //异常处理器
