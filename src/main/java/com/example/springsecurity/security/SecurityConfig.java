@@ -19,10 +19,6 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class SecurityConfig {
 
     //授权（过滤器
-//    @Autowired
-//    MyAuthenticationFailureHandler myAuthenticationFailureHandler;
-//    @Autowired
-//    MyAuthenticationEntryPoint AuthenticationEntryPoint;
     @Autowired
     JwtAuthenticationTokenFilter jwtAuthenticationTokenFilter;
 
@@ -35,24 +31,20 @@ public class SecurityConfig {
 
 //                .antMatchers("/test/**").permitAll()
 //                .antMatchers("/login/**").permitAll()
-//                .antMatchers("/admin/**").hasRole("admin")  //确实是有用的
+//                .antMatchers("/admin/**").hasRole("admin")
 //                .antMatchers("/boss/**").access("hasAnyRole('boss','admin')")
 //                .antMatchers("/employe/**").access("hasAnyRole('boss','employe','admin')")
 //                .anyRequest().authenticated()
-//                .and()
+//                .and()F
 //                .formLogin()  //开启表单验证
 //                .permitAll();
         //TOKEN Filter
-//        http.addFilterBefore(test,UsernamePasswordAuthenticationFilter.class);
         http.addFilterBefore(jwtAuthenticationTokenFilter,UsernamePasswordAuthenticationFilter.class);
-
         //异常处理器
         http.exceptionHandling().
-//                authenticationEntryPoint(accessDeniedHandle).
-                accessDeniedHandler(accessDeniedHandler);
+                accessDeniedHandler(accessDeniedHandler);  //权限不足
         //关闭CSRF
         http.csrf().disable();
-
         //允许跨域
         http.cors(Customizer.withDefaults());
 

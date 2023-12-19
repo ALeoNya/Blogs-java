@@ -32,15 +32,17 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         LambdaQueryWrapper<UserAuth> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(UserAuth::getUsername,username);  //LambdaQueryWrapper是查询语句
         UserAuth user = userAuthMapper.selectOne(wrapper);
+        System.out.println("根据名字查询到数据库中的用户凭证为: "+ user);
         //如果查询不到数据就通过抛出异常来给出提示
         if(Objects.isNull(user)){
             throw new RuntimeException("用户名或密码错误");
         }
-        System.out.println(user.getId());
+//        System.out.println(user.getId());
         //TODO 根据用户查询权限信息 添加到LoginUser中
         List<String> permissionKeyList = roleResourceMapper.listPermsByUserId(user.getId());
-        System.out.println(permissionKeyList);
+        List<String> list = new ArrayList<>(Arrays.asList("/hello"));
+        
         //封装成UserDetails对象返回给AuthtenticationManager
-        return new LoginUser(user,permissionKeyList);
+        return new LoginUser(user,list);
     }
 }

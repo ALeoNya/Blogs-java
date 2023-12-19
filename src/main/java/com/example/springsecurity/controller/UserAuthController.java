@@ -43,6 +43,7 @@ public class UserAuthController {
     @Autowired
     private RedisTemplate redisTemplate;
     @PostMapping("/allUserAuth")
+//    @PreAuthorize("hasAuthority('userAuth/allUserAuth')")
     //从后端返回所有数据到前端
     public Response allUserAuth(@RequestBody UserAuth userAuth) {
         try {

@@ -6,6 +6,7 @@ import com.example.springsecurity.response.Code;
 import com.example.springsecurity.response.Msg;
 import com.example.springsecurity.service.ArticleService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @CrossOrigin
@@ -31,6 +32,7 @@ public class ArticleController {
     }
 
     @PostMapping("/allArticle")
+//    @PreAuthorize("hasAuthority('/article/getListArticle')")
     public Response allArticle() {
         try {
             return new Response(Code.SUCCESS, Msg.SEL_SUCCESS_MSG, articleService.allArticle());

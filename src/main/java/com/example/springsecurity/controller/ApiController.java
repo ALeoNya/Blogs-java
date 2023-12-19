@@ -1,6 +1,7 @@
 package com.example.springsecurity.controller;
 
 import com.alibaba.fastjson.JSONObject;
+import com.example.springsecurity.filter.MapToJson;
 import com.example.springsecurity.mq.RabbitConfig;
 import com.example.springsecurity.pojo.Resource;
 import com.example.springsecurity.pojo.Response;
@@ -13,7 +14,13 @@ import com.example.springsecurity.util.redis.config.InitRedis;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * 一个Controller对应一个Queue
@@ -33,8 +40,12 @@ public class ApiController {
     }
 
     @GetMapping("/hello")
-    public String hello(){
-        return "hello";
+//    @PreAuthorize("hasAuthority('/hello')")
+    public void hello(HttpServletResponse response) throws IOException {
+        Map<String, Object> map = new HashMap<>();
+        map.put("code","0");
+        map.put("msg","HelloWorld");
+        MapToJson.mapToJson(map, response);
     }
 
     @PostMapping("/helloRabbitMQ")
@@ -80,15 +91,5 @@ public class ApiController {
     @PreAuthorize("hasAnyAuthority('/article/updateArticle')")
     public Response updateArticle() {
         return new Response(Code.SUCCESS, Msg.ADD_SUCCESS_MSG, "updateArticle");
-    }
-
-    /**
-     * Redis测数
-     */
-    @Autowired
-    private RedisService redisService;
-    @PostMapping("/helloRedis")
-    public boolean RedisTest(@RequestBody Resource resource){
-        return redisService.containsKey(InitRedis.KEY_RESOURCE_LIST, resource.getId());
     }
 }

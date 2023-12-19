@@ -39,7 +39,11 @@ public class InitRedis {
 
     public static final String KEY_USERINFO_LIST = "DB:k_user_Info:userInfo";
     public static final String KEY_USERAUTH_LIST = "DB:k_user_auth:userAuth";
+
     public static final String KEY_USERROLE_LIST = "DB:k_user_role:userRole";
+    public static final String KEY_USERROLE_I_LIST = "DB:k_user_role_I:userRole";
+
+
     public static final String KEY_ROLE_LIST = "DB:k_role:role";
     public static final String KEY_ROLERESOURCE_LIST = "DB:k_role_resource:roleResource";
     public static final String KEY_RESOURCE_LIST = "DB:k_resource:resource";

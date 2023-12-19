@@ -1,17 +1,12 @@
 package com.example.springsecurity.service.Impt;
 
 import com.example.springsecurity.mapper.UserRoleMapper;
-import com.example.springsecurity.pojo.Response;
-import com.example.springsecurity.pojo.Role;
-import com.example.springsecurity.pojo.RoleResource;
-import com.example.springsecurity.pojo.UserRole;
+import com.example.springsecurity.pojo.*;
 import com.example.springsecurity.response.Code;
 import com.example.springsecurity.response.Msg;
-import com.example.springsecurity.service.RoleService;
 import com.example.springsecurity.service.UserRoleService;
 import com.example.springsecurity.util.redis.config.InitRedis;
 import com.example.springsecurity.util.redis.service.RedisService;
-import org.checkerframework.checker.units.qual.A;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -69,10 +64,44 @@ public class UserRoleServiceImpl implements UserRoleService {
 
     @Override
     public Response selUserRoleById(UserRole userRole) {
+        int key = userRole.getId();
         try {
-            return new Response(Code.SUCCESS, Msg.SEL_SUCCESS_MSG, redisService.allCache(InitRedis.KEY_USERROLE_LIST));
+            if(redisService.containsKey(InitRedis.KEY_USERROLE_LIST, key)) {
+                return new Response(Code.SUCCESS, Msg.SEL_SUCCESS_MSG, redisService.getObject(InitRedis.KEY_USERROLE_LIST, key));
+            } else {
+                UserRole get = userRoleMapper.selectById(key);
+                //查到null值缓存到redis设置过期时间为6min
+                if(get == null) {
+                    redisService.cacheValue(InitRedis.KEY_USERROLE_LIST, key, get, 360);
+                    return new Response(Code.FAILED, Msg.SEL_FAIL_MSG, "你查询的是一个空值");
+                }
+                redisService.cacheValue(InitRedis.KEY_USERROLE_LIST, key, get, 3600);
+                return new Response(Code.SUCCESS, Msg.SEL_SUCCESS_MSG, redisService.getObject(InitRedis.KEY_USERROLE_LIST, key));
+            }
         } catch (RuntimeException e) {
             return new Response(Code.FAILED, Msg.SEL_FAIL_MSG, e);
+        }
+    }
+
+    @Override
+    public UserRole selUserRoleByUserId(int userid) {
+        int key = userid;
+        try {
+            if(redisService.containsKey(InitRedis.KEY_USERROLE_I_LIST, key)) {
+                return redisService.getObject(InitRedis.KEY_USERROLE_I_LIST, key);
+            } else {
+                UserRole get = userRoleMapper.selectById(key);
+                //查到null值缓存到redis设置过期时间为6min
+                if(get == null) {
+                    redisService.cacheValue(InitRedis.KEY_USERROLE_I_LIST, key, get, 360);
+                    return null;
+                }
+                redisService.cacheValue(InitRedis.KEY_USERROLE_I_LIST, key, get, 3600);
+                return redisService.getObject(InitRedis.KEY_USERROLE_I_LIST, key);
+            }
+        } catch (RuntimeException e) {
+            throw e;
+//            return new Response(Code.FAILED, Msg.SEL_FAIL_MSG, e);
         }
     }
 

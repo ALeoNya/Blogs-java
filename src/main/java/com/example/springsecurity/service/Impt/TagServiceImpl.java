@@ -62,7 +62,6 @@ public class TagServiceImpl implements TagService {
                 redisService.cacheValue(InitRedis.KEY_TAG_LIST, key, get, 3600);
                 return new Response(Code.SUCCESS, Msg.SEL_SUCCESS_MSG, redisService.getObject(InitRedis.KEY_TAG_LIST, key));
             }
-
         } catch (RuntimeException e) {
             return new Response(Code.FAILED, Msg.SEL_FAIL_MSG, e);
         }

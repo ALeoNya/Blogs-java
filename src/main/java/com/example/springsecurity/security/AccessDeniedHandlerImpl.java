@@ -26,7 +26,7 @@ import java.util.Map;
         String json = JSON.toJSONString(map);
         response.setContentType("application/json;charset=UTF-8");
         response.getWriter().println(json);
-        System.out.println(json);
+//        System.out.println(json);
     }
 }
 
