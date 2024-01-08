@@ -36,19 +36,27 @@ public class ArticleController {
 
 
     @PostMapping("/article/fakeDelArticle")
-    // TODO 假删除
-    public Response fakeDelArticle(@RequestBody Article article) {
+    public Response fakeallDelArticle(@RequestBody Article article) {
         if(articleService.fakeDelArticle(article)) {
             return new Response(Code.SUCCESS, Msg.DEL_SUCCESS_MSG, true);
         }
         return new Response(Code.FAILED, Msg.DEL_FAIL_MSG, false);
     }
 
-    @PostMapping("/allArticle")
-    @PreAuthorize("hasAuthority('/article/getListArticle')")
+    @PostMapping("/article/allArticle")
+//    @PreAuthorize("hasAuthority('/article/getListArticle')")
     public Response allArticle() {
         try {
             return new Response(Code.SUCCESS, Msg.SEL_SUCCESS_MSG, articleService.allArticle());
+        } catch (Exception e) {
+            return new Response(Code.FAILED, Msg.SEL_FAIL_MSG, false);
+        }
+    }
+
+    @PostMapping("/article/allDelArticle")
+    public Response allDelArticle() {
+        try {
+            return new Response(Code.SUCCESS, Msg.SEL_SUCCESS_MSG, articleService.allDelArticle());
         } catch (Exception e) {
             return new Response(Code.FAILED, Msg.SEL_FAIL_MSG, false);
         }

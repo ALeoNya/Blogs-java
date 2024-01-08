@@ -105,6 +105,5 @@ public class InitRedis {
         articleMapper.selectList(articleDeleteWrapper)
                 .stream()
                 .forEach(article -> redisService.cacheValue(KEY_ARTICLE_LIST_DELETE, article.getId(), article, 3600));
-
     }
 }

@@ -8,7 +8,6 @@ import com.example.springsecurity.pojo.ArticleTag;
 import com.example.springsecurity.service.ArticleService;
 import com.example.springsecurity.service.ArticleTagService;
 import com.example.springsecurity.util.redis.service.RedisService;
-import com.example.springsecurity.util.redis.config.InitRedis;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
@@ -17,6 +16,10 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
+
+import static com.example.springsecurity.util.redis.config.InitRedis.KEY_ARTICLE_LIST;
+import static com.example.springsecurity.util.redis.config.InitRedis.KEY_ARTICLE_LIST_DELETE;
+
 
 @Service("ArticleService")
 public class ArticleServiceImpl implements ArticleService {
@@ -39,7 +42,7 @@ public class ArticleServiceImpl implements ArticleService {
             // 对数据库操作
             articleMapper.insert(article);
             // 对Redis操作
-            redisService.cacheValue(InitRedis.KEY_ARTICLE_LIST, article.getId(), article, 3600);
+            redisService.cacheValue(KEY_ARTICLE_LIST, article.getId(), article, 3600);
         } catch (Exception e) {
             return false;
         }
@@ -65,7 +68,7 @@ public class ArticleServiceImpl implements ArticleService {
     @Override
     public boolean delArticle(Article article) {
         try {
-            redisService.expire(InitRedis.KEY_ARTICLE_LIST, article.getId(), 3, TimeUnit.SECONDS);
+            redisService.expire(KEY_ARTICLE_LIST, article.getId(), 3, TimeUnit.SECONDS);
             articleMapper.deleteById(article.getId());
             // TODO 需要同时删除article_tag表(根据article_id查询删除
             QueryWrapper<ArticleTag> qw_ArticleTag = new QueryWrapper<>();
@@ -80,25 +83,26 @@ public class ArticleServiceImpl implements ArticleService {
     @Override
     public Article selArticleById(Article article) {
         try {
-            if(redisService.containsKey(InitRedis.KEY_ARTICLE_LIST, article.getId())) {
+            if(redisService.containsKey(KEY_ARTICLE_LIST, article.getId())) {
                 return redisService.getArticle(article);
             }
         } catch (Exception e) {
             return null;
         }
-        redisService.cacheValue(InitRedis.KEY_ARTICLE_LIST, article.getId(), articleMapper.selectById(article.getId()), 360000);
+        redisService.cacheValue(KEY_ARTICLE_LIST, article.getId(), articleMapper.selectById(article.getId()), 360000);
         return redisService.getArticle(article);
     }
 
     @Override
     public Map<String, Object> allArticle() {
         Map<String, Object> redisData = new HashMap<>();
-        Set<String> keys = redisTemplate.keys("DB:k_article:*");
-        
+        Set<String> keys = redisTemplate.keys("DB:k_article:article:not_delete*");
         if(keys == null) {
-            articleMapper.selectList(null)
+            QueryWrapper<Article> wrapper = new QueryWrapper<>();
+            wrapper.eq("is_delete",0);
+            articleMapper.selectList(wrapper)
                     .stream()
-                    .forEach(article -> redisService.cacheValue(InitRedis.KEY_ARTICLE_LIST, article.getId(), article, 3600));
+                    .forEach(articles -> redisService.cacheValue(KEY_ARTICLE_LIST, articles.getId(), articles, 3600));
         }
         for (String key : keys) {
             redisData.put(key, redisTemplate.opsForValue().get(key));
@@ -107,14 +111,15 @@ public class ArticleServiceImpl implements ArticleService {
     }
 
     @Override
-    public Map<String, Object> allRecycleArticle() {
+    public Map<String, Object> allDelArticle() {
         Map<String, Object> redisData = new HashMap<>();
-        Set<String> keys = redisTemplate.keys("DB:k_article:*");
+        Set<String> keys = redisTemplate.keys("DB:k_article:recycle:is_delete*");
         if(keys == null) {
-            
-            articleMapper.selectList(null)
+            QueryWrapper<Article> articleDeleteWrapper = new QueryWrapper<>();
+            articleDeleteWrapper.eq("is_delete",1);
+            articleMapper.selectList(articleDeleteWrapper)
                     .stream()
-                    .forEach(article -> redisService.cacheValue(InitRedis.KEY_ARTICLE_LIST, article.getId(), article, 3600));
+                    .forEach(article -> redisService.cacheValue(KEY_ARTICLE_LIST_DELETE, article.getId(), article, 3600));
         }
         for (String key : keys) {
             redisData.put(key, redisTemplate.opsForValue().get(key));
@@ -125,7 +130,7 @@ public class ArticleServiceImpl implements ArticleService {
     @Override
     public boolean updArticle(Article article) {
         try {
-            redisService.expire(InitRedis.KEY_ARTICLE_LIST, article.getId(), 3, TimeUnit.SECONDS);
+            redisService.expire(KEY_ARTICLE_LIST, article.getId(), 3, TimeUnit.SECONDS);
             articleMapper.updateById(article);
         } catch (Exception e) {
             return false;
