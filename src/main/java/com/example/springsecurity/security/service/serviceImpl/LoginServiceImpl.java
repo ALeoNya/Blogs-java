@@ -30,7 +30,7 @@ public class LoginServiceImpl implements LoginService {
     RoleService roleService;
     @Override
     public Response login(UserAuth user) {
-//        try {
+        try {
             //AuthenticationManager进行用户验证
             UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(user.getUsername(),user.getPassword());
             Authentication authenticate = authenticationManager.authenticate(authenticationToken);
@@ -55,9 +55,10 @@ public class LoginServiceImpl implements LoginService {
             HashMap<String,String> map = new HashMap<>();
             map.put("token",jwt);
             map.put("status",role1.getRoleName());
+            map.put("userId",userId);
             return new Response(417,"欢迎回来,铁御",map);
-//        } catch (AuthenticationException e) {
-//            return new Response(416,"任务代号4-1-7","请检查你的账号或密码...登录失败");
-//        }
+        } catch (AuthenticationException e) {
+            return new Response(416,"任务代号4-1-7","请检查你的账号或密码...登录失败");
+        }
     }
 }

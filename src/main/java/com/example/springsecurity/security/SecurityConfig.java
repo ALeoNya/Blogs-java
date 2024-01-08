@@ -38,11 +38,11 @@ public class SecurityConfig {
 //                .and()F
 //                .formLogin()  //开启表单验证
 //                .permitAll();
-        //TOKEN Filter
-        http.addFilterBefore(jwtAuthenticationTokenFilter,UsernamePasswordAuthenticationFilter.class);
         //异常处理器
         http.exceptionHandling().
                 accessDeniedHandler(accessDeniedHandler);  //权限不足
+        //TOKEN Filter
+        http.addFilterBefore(jwtAuthenticationTokenFilter,UsernamePasswordAuthenticationFilter.class);
         //关闭CSRF
         http.csrf().disable();
         //允许跨域

@@ -19,14 +19,13 @@ import java.util.Map;
     public class AccessDeniedHandlerImpl implements AccessDeniedHandler {
     @Override
     @ExceptionHandler(AccessDeniedException.class)
-    public void handle(HttpServletRequest request, HttpServletResponse response, AccessDeniedException accessDeniedException) throws AccessDeniedException ,IOException, ServletException {
+    public void handle(HttpServletRequest request, HttpServletResponse response, AccessDeniedException accessDeniedException) throws AccessDeniedException ,IOException {
         Map<String,Object> map = new LinkedHashMap<>();
         map.put("code","403");
         map.put("msg","权限不足");
         String json = JSON.toJSONString(map);
         response.setContentType("application/json;charset=UTF-8");
         response.getWriter().println(json);
-//        System.out.println(json);
     }
 }
 

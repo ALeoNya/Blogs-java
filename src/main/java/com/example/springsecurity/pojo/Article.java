@@ -43,9 +43,9 @@ public class Article {
 
     private String originalUrl;
 
-    @TableField(fill = FieldFill.INSERT)  //插入时自动填充日期
+    @TableField(fill = FieldFill.INSERT)  //插入时自动填充日期（
     private LocalDateTime createTime;
 
-    @TableField(fill = FieldFill.UPDATE)  //更新时自动填充日期
+    @TableField(fill = FieldFill.UPDATE)  //更新时自动填充日期（
     private LocalDateTime updateTime;
 }

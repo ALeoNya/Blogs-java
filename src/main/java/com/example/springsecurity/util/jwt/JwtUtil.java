@@ -17,7 +17,8 @@ public class JwtUtil {
     // 设置秘钥明文
     public static final String KEY = "Vanilla";
     // 设置TOKEN存活时间
-    private static long TTL =3600000;
+//    private static long TTL =3600000;  //1h
+    private static long TTL =36000000;  //10h
 
     /**
      * 生成JWT
@@ -36,7 +37,6 @@ public class JwtUtil {
                 .setIssuer("sg")  // 签发者
                 .setIssuedAt(now)  // 签发时间
                 .signWith(SignatureAlgorithm.HS256,secretKey );  // 使用HS256对称加密算法签名, 第二个参数为秘钥
-//                .claim("roles",auth);
         if (TTL > 0) {
             builder.setExpiration( new Date( nowMillis + TTL));
         }

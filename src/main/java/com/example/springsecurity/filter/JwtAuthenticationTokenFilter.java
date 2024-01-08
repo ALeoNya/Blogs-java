@@ -51,7 +51,7 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
             userid = Integer.parseInt(claims.getId());
             //TODO 从redis中获取用户信息
 
-            //TODO 将获取的权限信息封装到Authentication中
+            // 将获取的权限信息封装到Authentication中
             List<String> permissionKeyList =  roleResourceMapper.listPermsByUserId(userid);
             System.out.println("权限信息为：" + permissionKeyList);
             LoginUser loginUser = new LoginUser(userAuthMapper.selectById(userid),permissionKeyList);
@@ -61,33 +61,37 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
             SecurityContextHolder.getContext().setAuthentication(authenticationToken);
             //放行
             filterChain.doFilter(request, response);
-
             //不抛出异常是因为抛出后会响应默认的Json覆盖掉MapToJson，但我也希望在控制台可以看到错误日志
         } catch (SignatureException e) {
             e.printStackTrace();
+            map.put("code",401);
             map.put("msg", "无效签名");
             MapToJson.mapToJson(map,response);
-//            throw new RuntimeException("无效签名");
         } catch (UnsupportedJwtException e) {
             e.printStackTrace();
+            map.put("code",401);
             map.put("msg", "不支持的签名");
             MapToJson.mapToJson(map,response);
-//            throw new RuntimeException("不支持的签名");
         } catch (ExpiredJwtException e) {
             e.printStackTrace();
+            map.put("code",401);
             map.put("msg", "token过期");
             MapToJson.mapToJson(map,response);
-//            throw new RuntimeException("token过期");
         } catch (MalformedJwtException e) {
             e.printStackTrace();
+            map.put("code",401);
             map.put("msg", "不支持的签名格式");
             MapToJson.mapToJson(map,response);
-//            throw new RuntimeException("不支持的签名格式");
-        }catch (Exception e) {
+        } catch (IllegalArgumentException e) {
             e.printStackTrace();
+            map.put("code",403);
+            map.put("msg", "用户权限不足");
+            MapToJson.mapToJson(map,response);
+        } catch (Exception e) {
+            e.printStackTrace();
+            map.put("code",401);
             map.put("msg", "token非法");
             MapToJson.mapToJson(map,response);
-//            throw new RuntimeException("token非法");
         }
     }
 }
