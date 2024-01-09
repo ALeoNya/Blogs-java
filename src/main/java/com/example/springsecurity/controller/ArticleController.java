@@ -34,6 +34,13 @@ public class ArticleController {
         return new Response(Code.FAILED, Msg.DEL_FAIL_MSG, false);
     }
 
+    @PostMapping("/article/recoverArticle")
+    public Response recoverArticle(@RequestBody Article article) {
+        if(articleService.recoverArticle(article)) {
+            return new Response(Code.SUCCESS, Msg.DEL_SUCCESS_MSG, true);
+        }
+        return new Response(Code.FAILED, Msg.DEL_FAIL_MSG, false);
+    }
 
     @PostMapping("/article/fakeDelArticle")
     public Response fakeallDelArticle(@RequestBody Article article) {

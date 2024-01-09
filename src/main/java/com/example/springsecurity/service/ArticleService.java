@@ -7,6 +7,7 @@ import java.util.Map;
 public interface ArticleService {
     boolean addArticle(Article article);
 
+    boolean recoverArticle(Article article);
     boolean fakeDelArticle(Article article);
     boolean delArticle(Article article);
 

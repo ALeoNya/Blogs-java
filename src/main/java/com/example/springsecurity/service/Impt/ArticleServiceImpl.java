@@ -50,6 +50,21 @@ public class ArticleServiceImpl implements ArticleService {
         return true;
     }
 
+    @Override
+    public boolean recoverArticle(Article article) {
+        try {
+            // 过期recycle的article
+            redisService.expire(KEY_ARTICLE_LIST_DELETE,article.getId(),4,TimeUnit.SECONDS);
+            // 改变is_delete字段值
+            articleMapper.recoverArticle(article);
+            // 查询数据库中修改后的数据并且添加到article
+            redisService.cacheValue(KEY_ARTICLE_LIST, article.getId(), articleMapper.selectById(article.getId()), 3600);
+        } catch (RuntimeException ignored) {
+            return false;
+        }
+        return true;
+    }
+
     /**
      * 假删除文章（OK
      * @param article
