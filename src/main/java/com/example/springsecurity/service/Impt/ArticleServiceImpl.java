@@ -17,8 +17,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
-import static com.example.springsecurity.util.redis.config.InitRedis.KEY_ARTICLE_LIST;
-import static com.example.springsecurity.util.redis.config.InitRedis.KEY_ARTICLE_LIST_DELETE;
+import static com.example.springsecurity.util.redis.config.InitRedis.*;
 
 
 @Service("ArticleService")
@@ -26,15 +25,17 @@ public class ArticleServiceImpl implements ArticleService {
     @Autowired
     private ArticleMapper articleMapper;
     @Autowired
-    private ArticleTagService articleTagService;
-    @Autowired
     private ArticleTagMapper articleTagMapper;
-
-
     @Autowired
     private RedisService redisService;
     @Autowired
     private RedisTemplate redisTemplate;
+
+    /**
+     * 添加文章（OK
+     * @param article
+     * @return
+     */
     @Override
     public boolean addArticle(Article article) {
         try {
@@ -50,27 +51,45 @@ public class ArticleServiceImpl implements ArticleService {
     }
 
     /**
-     * 假删除
+     * 假删除文章（OK
      * @param article
      * @return
      */
     @Override
     public boolean fakeDelArticle(Article article) {
         try {
+//            long start = System.currentTimeMillis();
+
+            // 过期redis的article
+            redisService.expire(KEY_ARTICLE_LIST,article.getId(),4,TimeUnit.SECONDS);
+            // 改变is_delete字段值
             articleMapper.fakeDelArticle(article);
+            // 查询数据库中修改后的数据并且添加到redis的recycle
+            redisService.cacheValue(KEY_ARTICLE_LIST_DELETE, article.getId(), articleMapper.selectById(article.getId()), 3600);
+
+//            long end = System.currentTimeMillis();
+//            long duration = end - start;
+//            System.out.println("接口运行时长为"+duration);
         } catch (RuntimeException ignored) {
             return false;
         }
         return true;
     }
 
-
+    /**
+     * 真删除文章（OK
+     * @param article
+     * @return
+     */
     @Override
     public boolean delArticle(Article article) {
         try {
-            redisService.expire(KEY_ARTICLE_LIST, article.getId(), 3, TimeUnit.SECONDS);
+            // 将recycle中的数据过期
+            redisService.expire(KEY_ARTICLE_LIST_DELETE, article.getId(), 3, TimeUnit.SECONDS);
+            // 删除k_Article对应的记录
             articleMapper.deleteById(article.getId());
-            // TODO 需要同时删除article_tag表(根据article_id查询删除
+            // 同时删除mysql，redis中article_tag表(根据article_id查询删除
+            redisService.expire(KEY_ARTICLETAG_LIST, article.getId(), 3, TimeUnit.SECONDS);
             QueryWrapper<ArticleTag> qw_ArticleTag = new QueryWrapper<>();
             qw_ArticleTag.eq("article_id",article.getId());
             articleTagMapper.delete(qw_ArticleTag);
@@ -80,6 +99,11 @@ public class ArticleServiceImpl implements ArticleService {
         return true;
     }
 
+    /**
+     * 查询单篇文章（OK
+     * @param article
+     * @return
+     */
     @Override
     public Article selArticleById(Article article) {
         try {
@@ -93,6 +117,30 @@ public class ArticleServiceImpl implements ArticleService {
         return redisService.getArticle(article);
     }
 
+    /**
+     * 回收站列表
+     */
+    @Override
+    public Map<String, Object> allDelArticle() {
+        Map<String, Object> redisData = new HashMap<>();
+        Set<String> keys = redisTemplate.keys("DB:k_article:recycle:is_delete*");
+        if(keys == null) {
+            QueryWrapper<Article> wrapper = new QueryWrapper<>();
+            wrapper.eq("is_delete",1);
+            articleMapper.selectList(wrapper)
+                    .stream()
+                    .forEach(articles -> redisService.cacheValue(KEY_ARTICLE_LIST, articles.getId(), articles, 3600));
+        }
+        for (String key : keys) {
+            redisData.put(key, redisTemplate.opsForValue().get(key));
+        }
+        return redisData;
+    }
+
+    /**
+     * 所有文章 列表（OK
+     * @return
+     */
     @Override
     public Map<String, Object> allArticle() {
         Map<String, Object> redisData = new HashMap<>();
@@ -110,23 +158,11 @@ public class ArticleServiceImpl implements ArticleService {
         return redisData;
     }
 
-    @Override
-    public Map<String, Object> allDelArticle() {
-        Map<String, Object> redisData = new HashMap<>();
-        Set<String> keys = redisTemplate.keys("DB:k_article:recycle:is_delete*");
-        if(keys == null) {
-            QueryWrapper<Article> articleDeleteWrapper = new QueryWrapper<>();
-            articleDeleteWrapper.eq("is_delete",1);
-            articleMapper.selectList(articleDeleteWrapper)
-                    .stream()
-                    .forEach(article -> redisService.cacheValue(KEY_ARTICLE_LIST_DELETE, article.getId(), article, 3600));
-        }
-        for (String key : keys) {
-            redisData.put(key, redisTemplate.opsForValue().get(key));
-        }
-        return redisData;
-    }
-
+    /**
+     * 更新文章（
+     * @param article
+     * @return
+     */
     @Override
     public boolean updArticle(Article article) {
         try {

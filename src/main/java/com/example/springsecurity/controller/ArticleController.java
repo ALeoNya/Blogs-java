@@ -26,7 +26,7 @@ public class ArticleController {
         return new Response(Code.FAILED, Msg.ADD_FAIL_MSG, "格式错误");
     }
 
-    @PostMapping("/ article/delArticle")
+    @PostMapping("/article/delArticle")
     public Response delArticle(@RequestBody Article article) {
         if(articleService.delArticle(article)) {
             return new Response(Code.SUCCESS, Msg.DEL_SUCCESS_MSG, true);
