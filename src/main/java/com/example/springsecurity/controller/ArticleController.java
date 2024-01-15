@@ -5,10 +5,7 @@ import com.example.springsecurity.pojo.Response;
 import com.example.springsecurity.response.Code;
 import com.example.springsecurity.response.Msg;
 import com.example.springsecurity.service.ArticleService;
-import com.example.springsecurity.util.redis.config.InitRedis;
-import com.example.springsecurity.util.redis.service.RedisService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @CrossOrigin
@@ -34,17 +31,17 @@ public class ArticleController {
         return new Response(Code.FAILED, Msg.DEL_FAIL_MSG, false);
     }
 
-    @PostMapping("/article/recoverArticle")
-    public Response recoverArticle(@RequestBody Article article) {
-        if(articleService.recoverArticle(article)) {
+    @PostMapping("/article/fakeDelArticle")
+    public Response fakeallDelArticle(@RequestBody Article article) {
+        if(articleService.fakeDelArticle(article)) {
             return new Response(Code.SUCCESS, Msg.DEL_SUCCESS_MSG, true);
         }
         return new Response(Code.FAILED, Msg.DEL_FAIL_MSG, false);
     }
 
-    @PostMapping("/article/fakeDelArticle")
-    public Response fakeallDelArticle(@RequestBody Article article) {
-        if(articleService.fakeDelArticle(article)) {
+    @PostMapping("/article/recoverArticle")
+    public Response recoverArticle(@RequestBody Article article) {
+        if(articleService.recoverArticle(article)) {
             return new Response(Code.SUCCESS, Msg.DEL_SUCCESS_MSG, true);
         }
         return new Response(Code.FAILED, Msg.DEL_FAIL_MSG, false);
@@ -78,10 +75,10 @@ public class ArticleController {
         }
     }
 
-    @PostMapping("/updArticle")
+    @PostMapping("/article/updArticle")
     public Response updArticle(@RequestBody Article article) {
         if(articleService.updArticle(article)) {
-            return new Response(Code.SUCCESS, Msg.UPD_SUCCESS_MSG, "完成咯！");
+            return new Response(Code.SUCCESS, Msg.UPD_SUCCESS_MSG, "更新已完成，正在跳转...");
         }
         return new Response(Code.FAILED, Msg.UPD_FAIL_MSG, "请重新更新");
     }

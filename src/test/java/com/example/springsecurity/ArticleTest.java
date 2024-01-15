@@ -61,4 +61,14 @@ public class ArticleTest {
         List<Article> articles = articleMapper.selectList(wrapper);
         System.out.println(articles);
     }
+
+    @Test
+    public void updateArticle() {
+        Article newArticle = new Article();
+        newArticle.setId(10);
+        newArticle.setCategoryId(1);
+        articleMapper.updateById(newArticle);
+        System.out.println(articleMapper.selectById(10));
+    }
+
 }
