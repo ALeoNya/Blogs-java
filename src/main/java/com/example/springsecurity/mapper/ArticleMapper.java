@@ -15,4 +15,7 @@ public interface ArticleMapper extends BaseMapper<Article> {
 
     @Update("update k_article set is_delete = '0' where id = #{id}")
     void recoverArticle(Article article);
+
+    @Update("alter table `kotori`.`k_article` auto_increment = 1")
+    void autoIncrement();
 }

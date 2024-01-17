@@ -36,27 +36,14 @@ public class ArticleServiceImpl implements ArticleService {
     @Override
     public boolean addArticle(Article article) {
         try {
-            System.out.println(article);
+//            System.out.println(article);
+            // 重置主键值
+            articleMapper.autoIncrement();
             // 对数据库操作
             articleMapper.insert(article);
             // 对Redis操作
             redisService.cacheValue(KEY_ARTICLE_LIST, article.getId(), article, 3600);
         } catch (Exception e) {
-            return false;
-        }
-        return true;
-    }
-
-    @Override
-    public boolean recoverArticle(Article article) {
-        try {
-            // 过期recycle的article
-            redisService.expire(KEY_ARTICLE_LIST_DELETE,article.getId(),4,TimeUnit.SECONDS);
-            // 改变is_delete字段值
-            articleMapper.recoverArticle(article);
-            // 查询数据库中修改后的数据并且添加到article
-            redisService.cacheValue(KEY_ARTICLE_LIST, article.getId(), articleMapper.selectById(article.getId()), 3600);
-        } catch (RuntimeException ignored) {
             return false;
         }
         return true;
@@ -179,19 +166,39 @@ public class ArticleServiceImpl implements ArticleService {
     public boolean updArticle(Article article) {
         try {
             System.out.println("更新内容为："+article);
-            // TODO 更新操作过期旧的更新DB然后添加到redis中
             // 过期redis
             redisService.expire(KEY_ARTICLE_LIST, article.getId(), 2, TimeUnit.SECONDS);
             // 更新DB
             articleMapper.updateById(article);
             // 添加到redis
-            redisService.cacheValue(KEY_ARTICLE_LIST, article.getId(), articleMapper.selectById(article.getId()), 3600);
-//            if(article.getIsDelete()==0) {
-//                redisService.cacheValue(KEY_ARTICLE_LIST, article.getId(), articleMapper.selectById(article.getId()), 3600);
-//            } else {
-//                redisService.cacheValue(KEY_ARTICLE_LIST_DELETE, article.getId(), articleMapper.selectById(article.getId()), 3600);
-//            }
+//            redisService.cacheValue(KEY_ARTICLE_LIST, article.getId(), articleMapper.selectById(article.getId()), 3600);
+            // TODO 前台应该传回去所有数据？包括is_delete才行
+            if(article.getIsDelete()==0) {
+                redisService.cacheValue(KEY_ARTICLE_LIST, article.getId(), articleMapper.selectById(article.getId()), 3600);
+            } else {
+                redisService.cacheValue(KEY_ARTICLE_LIST_DELETE, article.getId(), articleMapper.selectById(article.getId()), 3600);
+            }
         } catch (Exception e) {
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * 恢复文章（更改is_delete = 0
+     * @param article
+     * @return
+     */
+    @Override
+    public boolean recoverArticle(Article article) {
+        try {
+            // 过期recycle的article
+            redisService.expire(KEY_ARTICLE_LIST_DELETE,article.getId(),1,TimeUnit.SECONDS);
+            // 改变is_delete字段值
+            articleMapper.recoverArticle(article);
+            // 查询数据库中修改后的数据并且添加到article
+            redisService.cacheValue(KEY_ARTICLE_LIST, article.getId(), articleMapper.selectById(article.getId()), 3600);
+        } catch (RuntimeException ignored) {
             return false;
         }
         return true;

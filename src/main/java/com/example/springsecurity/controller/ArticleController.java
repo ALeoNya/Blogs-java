@@ -26,25 +26,25 @@ public class ArticleController {
     @PostMapping("/article/delArticle")
     public Response delArticle(@RequestBody Article article) {
         if(articleService.delArticle(article)) {
-            return new Response(Code.SUCCESS, Msg.DEL_SUCCESS_MSG, true);
+            return new Response(Code.SUCCESS, Msg.DEL_SUCCESS_MSG, "删除文章成功");
         }
-        return new Response(Code.FAILED, Msg.DEL_FAIL_MSG, false);
+        return new Response(Code.FAILED, Msg.DEL_FAIL_MSG, "删除文章失败，请重试");
     }
 
     @PostMapping("/article/fakeDelArticle")
     public Response fakeallDelArticle(@RequestBody Article article) {
         if(articleService.fakeDelArticle(article)) {
-            return new Response(Code.SUCCESS, Msg.DEL_SUCCESS_MSG, true);
+            return new Response(Code.SUCCESS, Msg.DEL_SUCCESS_MSG, "文章已移入回收站");
         }
-        return new Response(Code.FAILED, Msg.DEL_FAIL_MSG, false);
+        return new Response(Code.FAILED, Msg.DEL_FAIL_MSG, "文章移入回收站失败，请重试");
     }
 
     @PostMapping("/article/recoverArticle")
     public Response recoverArticle(@RequestBody Article article) {
         if(articleService.recoverArticle(article)) {
-            return new Response(Code.SUCCESS, Msg.DEL_SUCCESS_MSG, true);
+            return new Response(Code.SUCCESS, Msg.DEL_SUCCESS_MSG, "恢复文章成功");
         }
-        return new Response(Code.FAILED, Msg.DEL_FAIL_MSG, false);
+        return new Response(Code.FAILED, Msg.DEL_FAIL_MSG, "恢复文章失败，请重试");
     }
 
     @PostMapping("/article/allArticle")
