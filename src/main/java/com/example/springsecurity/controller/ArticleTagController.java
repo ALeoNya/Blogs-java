@@ -15,27 +15,27 @@ public class ArticleTagController {
     @Autowired
     private ArticleTagService articleTagService;
 
-    @PostMapping("/addArticleTag")
+    @PostMapping("/article/addArticleTag")
     public Response addArticleTag(@RequestBody ArticleTag articleTag) {
         return articleTagService.addArticleTag(articleTag);
     }
 
-    @PostMapping("/delArticleTag")
+    @PostMapping("/article/delArticleTag")
     public Response delArticleTag(@RequestBody ArticleTag articleTag) {
         return articleTagService.delArticleTag(articleTag);
     }
 
-    @PostMapping("/selArticleTagById")
+    @PostMapping("/article/selArticleTagById")
     public Response selArticleTagById(@RequestBody ArticleTag articleTag) {
         return articleTagService.selArticleTagById(articleTag);
     }
 
-    @PostMapping("/allArticleTag")
+    @PostMapping("/article/allArticleTag")
     public Response allArticleTag(@RequestBody ArticleTag articleTag) {
         return articleTagService.allArticleTag(articleTag);
     }
 
-    @PostMapping("/updArticleTag")
+    @PostMapping("/article/updArticleTag")
     public Response updArticleTag(@RequestBody ArticleTag articleTag) {
         return articleTagService.updArticleTag(articleTag);
     }

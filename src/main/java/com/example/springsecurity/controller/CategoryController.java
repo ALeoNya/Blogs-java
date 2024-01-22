@@ -15,27 +15,27 @@ public class CategoryController {
     @Autowired
     private CategoryService categoryService;
 
-    @PostMapping("/addCategory")
+    @PostMapping("/article/addCategory")
     public Response addCategory(@RequestBody Category Category) {
         return categoryService.addCategory(Category);
     }
 
-    @PostMapping("/delCategory")
+    @PostMapping("/article/delCategory")
     public Response delCategory(@RequestBody Category Category) {
         return categoryService.delCategory(Category);
     }
 
-    @PostMapping("/selCategoryById")
+    @PostMapping("/article/selCategoryById")
     public Response selCategoryById(@RequestBody Category Category) {
         return categoryService.selCategoryById(Category);
     }
 
-    @PostMapping("/allCategory")
-    public Response allCategory(@RequestBody Category Category) {
-        return categoryService.allCategory(Category);
+    @PostMapping("/article/allCategory")
+    public Response allCategory() {
+        return categoryService.allCategory();
     }
 
-    @PostMapping("/updCategory")
+    @PostMapping("/article/updCategory")
     public Response updCategory(@RequestBody Category Category) {
         return categoryService.updCategory(Category);
     }

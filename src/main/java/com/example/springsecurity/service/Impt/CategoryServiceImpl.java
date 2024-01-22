@@ -69,7 +69,7 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public Response allCategory(Category category) {
+    public Response allCategory() {
         try {
             return new Response(Code.SUCCESS, Msg.SEL_SUCCESS_MSG, redisService.allCache(InitRedis.KEY_CATEGORY_LIST));
         } catch (RuntimeException e) {

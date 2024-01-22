@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.ListOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
+import org.springframework.data.redis.core.ZSetOperations;
 import org.springframework.stereotype.Service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -41,6 +42,24 @@ public class RedisServiceImpl implements RedisService {
         try {
             ValueOperations ops = redisTemplate.opsForValue();
             ops.set(cachekey, value);
+            if(time>0) {
+                redisTemplate.expire(cachekey, time, TimeUnit.SECONDS);
+            }
+            return true;
+        } catch (Throwable e) {
+            log.error("缓存存入失败key:[{}] value:[{}]", key, value);
+        }
+        return false;
+    }
+
+    /**
+     * 添加 Zset key:Object 实体类缓存
+     */
+    public boolean cacheZsetValue(String prefix, int key, Article value, long time) {
+        String cachekey = prefix + key;
+        try {
+            ZSetOperations<String, Object> zSetoperations = redisTemplate.opsForZSet();
+            zSetoperations.add(cachekey, value, value.getId());
             if(time>0) {
                 redisTemplate.expire(cachekey, time, TimeUnit.SECONDS);
             }

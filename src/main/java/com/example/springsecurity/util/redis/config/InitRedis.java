@@ -61,49 +61,52 @@ public class InitRedis {
          */
 //        ArrayList<UserAuth> list = (ArrayList<UserAuth>) userAuthMapper.selectList(null);
 //        for(int i = 0; i<list.size(); i++) {
-//            int time = 3600000;
+//            int time = 36000000;
 //            redisService.cacheValue(list.get(i).getId(), list.get(i), time);
 //        }
         userInfoMapper.selectList(null)
                 .stream()
-                .forEach(userInfo -> redisService.cacheValue(KEY_USERINFO_LIST, userInfo.getId(), userInfo, 3600));
+                .forEach(userInfo -> redisService.cacheValue(KEY_USERINFO_LIST, userInfo.getId(), userInfo, 36000));
         userAuthMapper.selectList(null)
                 .stream()
-                .forEach(userAuth -> redisService.cacheValue(KEY_USERAUTH_LIST, userAuth.getId(), userAuth, 3600));
+                .forEach(userAuth -> redisService.cacheValue(KEY_USERAUTH_LIST, userAuth.getId(), userAuth, 36000));
         userRoleMapper.selectList(null)
                 .stream()
-                .forEach(userRole -> redisService.cacheValue(KEY_USERROLE_LIST, userRole.getId(), userRole, 3600));
+                .forEach(userRole -> redisService.cacheValue(KEY_USERROLE_LIST, userRole.getId(), userRole, 36000));
         roleMapper.selectList(null)
                 .stream()
-                .forEach(role-> redisService.cacheValue(KEY_ROLE_LIST, role.getId(), role, 3600));
+                .forEach(role-> redisService.cacheValue(KEY_ROLE_LIST, role.getId(), role, 36000));
         roleResourceMapper.selectList(null)
                 .stream()
-                .forEach(roleResource -> redisService.cacheValue(KEY_ROLERESOURCE_LIST, roleResource.getId(), roleResource, 3600));
+                .forEach(roleResource -> redisService.cacheValue(KEY_ROLERESOURCE_LIST, roleResource.getId(), roleResource, 36000));
         resourceMapper.selectList(null)
                 .stream()
-                .forEach(resource -> redisService.cacheValue(KEY_RESOURCE_LIST, resource.getId(), resource, 3600));
+                .forEach(resource -> redisService.cacheValue(KEY_RESOURCE_LIST, resource.getId(), resource, 36000));
         categoryMapper.selectList(null)
                 .stream()
-                .forEach(category -> redisService.cacheValue(KEY_CATEGORY_LIST, category.getId(), category, 3600));
+                .forEach(category -> redisService.cacheValue(KEY_CATEGORY_LIST, category.getId(), category, 36000));
         tagMapper.selectList(null)
                 .stream()
-                .forEach(tag -> redisService.cacheValue(KEY_TAG_LIST, tag.getId(), tag, 3600));
+                .forEach(tag -> redisService.cacheValue(KEY_TAG_LIST, tag.getId(), tag, 36000));
         articleTagMapper.selectList(null)
                 .stream()
-                .forEach(articleTag -> redisService.cacheValue(KEY_ARTICLETAG_LIST, articleTag.getId(), articleTag, 3600));
+                .forEach(articleTag -> redisService.cacheValue(KEY_ARTICLETAG_LIST, articleTag.getId(), articleTag, 36000));
 
         // 文章列表
         QueryWrapper<Article> wrapper = new QueryWrapper<>();
         wrapper.eq("is_delete",0);
         articleMapper.selectList(wrapper)
                 .stream()
-                .forEach(articles -> redisService.cacheValue(KEY_ARTICLE_LIST, articles.getId(), articles, 3600));
+                .forEach(articles -> redisService.cacheValue(KEY_ARTICLE_LIST, articles.getId(), articles, 36000));
+//                .forEach(article -> redisService.cacheZsetValue(KEY_ARTICLE_LIST, article.getId(), article, 36000));
+
 
         // 文章回收站列表
         QueryWrapper<Article> articleDeleteWrapper = new QueryWrapper<>();
         articleDeleteWrapper.eq("is_delete",1);
         articleMapper.selectList(articleDeleteWrapper)
                 .stream()
-                .forEach(article -> redisService.cacheValue(KEY_ARTICLE_LIST_DELETE, article.getId(), article, 3600));
+                .forEach(article -> redisService.cacheValue(KEY_ARTICLE_LIST_DELETE, article.getId(), article, 36000));
+//                .forEach(article -> redisService.cacheZsetValue(KEY_ARTICLE_LIST_DELETE, article.getId(), article, 36000));
     }
 }

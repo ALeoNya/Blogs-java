@@ -10,9 +10,8 @@ import com.example.springsecurity.util.redis.service.RedisService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
+
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 import static com.example.springsecurity.util.redis.config.InitRedis.*;
 
@@ -64,7 +63,9 @@ public class ArticleServiceImpl implements ArticleService {
             // 改变is_delete字段值
             articleMapper.fakeDelArticle(article);
             // 查询数据库中修改后的数据并且添加到redis的recycle
-            redisService.cacheValue(KEY_ARTICLE_LIST_DELETE, article.getId(), articleMapper.selectById(article.getId()), 3600);
+//            redisService.cacheValue(KEY_ARTICLE_LIST_DELETE, article.getId(), articleMapper.selectById(article.getId()), 3600);
+            // Zset
+            redisService.cacheZsetValue(KEY_ARTICLE_LIST, article.getId(), articleMapper.selectById(article.getId()), 3600);
 
 //            long end = System.currentTimeMillis();
 //            long duration = end - start;
@@ -150,11 +151,18 @@ public class ArticleServiceImpl implements ArticleService {
             articleMapper.selectList(wrapper)
                     .stream()
                     .forEach(articles -> redisService.cacheValue(KEY_ARTICLE_LIST, articles.getId(), articles, 3600));
+            // TODO 排序问题？如何实现时间由晚到早的进行排序呢？
+            //  1.是使用string拿到数据后再排序？但排序的key是字符串难以排序（
+            //  2.使用Zset集合呢？集合增删操作复杂需要直接过期整个set再从DB查询（
         }
+//        SortedMap<String, Object> sortedMap = new TreeMap<>(Comparator.reverseOrder());
         for (String key : keys) {
+//            sortedMap.put(key, redisTemplate.opsForValue().get(key));
             redisData.put(key, redisTemplate.opsForValue().get(key));
         }
+
         return redisData;
+//        return sortedMap;
     }
 
     /**
@@ -197,7 +205,9 @@ public class ArticleServiceImpl implements ArticleService {
             // 改变is_delete字段值
             articleMapper.recoverArticle(article);
             // 查询数据库中修改后的数据并且添加到article
-            redisService.cacheValue(KEY_ARTICLE_LIST, article.getId(), articleMapper.selectById(article.getId()), 3600);
+//            redisService.cacheValue(KEY_ARTICLE_LIST, article.getId(), articleMapper.selectById(article.getId()), 3600);
+            // Zset
+            redisService.cacheZsetValue(KEY_ARTICLE_LIST, article.getId(), articleMapper.selectById(article.getId()), 3600);
         } catch (RuntimeException ignored) {
             return false;
         }
