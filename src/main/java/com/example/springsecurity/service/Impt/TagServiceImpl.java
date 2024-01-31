@@ -25,11 +25,14 @@ public class TagServiceImpl implements TagService {
             if(tag.getTagName() == null) {
                 return new Response(Code.FAILED, Msg.ADD_FAIL_MSG, "插入数据为空");
             }
+            // 重置主键
+            tagMapper.autoIncrement();
+            // 插入
             tagMapper.insert(tag);
         } catch (RuntimeException e) {
             return new Response(Code.FAILED, Msg.ADD_FAIL_MSG, e);
         }
-        return new Response(Code.SUCCESS, Msg.ADD_SUCCESS_MSG, tag);
+        return new Response(Code.SUCCESS, Msg.ADD_SUCCESS_MSG, tagMapper.selectById(tag.getId()));
     }
 
     @Override

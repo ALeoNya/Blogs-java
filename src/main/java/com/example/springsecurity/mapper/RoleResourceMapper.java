@@ -25,4 +25,7 @@ public interface RoleResourceMapper extends BaseMapper<RoleResource> {
             "        LEFT JOIN k_resource res ON rr.resource_id = res.id\n" +
             "WHERE user_id= #{user_id}")
     List<String> listPermsByUserId(int user_id);
+
+    @Update("alter table `kotori`.`k_role_resource` auto_increment = 1")
+    void autoIncrement();
 }
