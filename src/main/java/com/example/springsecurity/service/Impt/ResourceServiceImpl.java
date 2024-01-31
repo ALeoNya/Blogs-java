@@ -69,7 +69,7 @@ public class ResourceServiceImpl implements ResourceService {
     }
 
     @Override
-    public Response allResource(Resource resource) {
+    public Response allResource() {
         try {
             return new Response(Code.SUCCESS, Msg.SEL_SUCCESS_MSG, redisService.allCache(InitRedis.KEY_RESOURCE_LIST));
         } catch (RuntimeException e) {

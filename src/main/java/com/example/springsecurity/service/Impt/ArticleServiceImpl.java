@@ -38,6 +38,7 @@ public class ArticleServiceImpl implements ArticleService {
 //            System.out.println(article);
             // 重置主键值
             articleMapper.autoIncrement();
+            System.out.println(article);
             // 对数据库操作
             articleMapper.insert(article);
             // 对Redis操作

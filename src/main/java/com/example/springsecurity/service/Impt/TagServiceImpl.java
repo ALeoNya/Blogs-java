@@ -21,13 +21,11 @@ public class TagServiceImpl implements TagService {
     private TagMapper tagMapper;
     @Override
     public Response addTag(Tag tag) {
-        int key = tag.getId();
         try {
-            tagMapper.insert(tag);
-            redisService.cacheValue(InitRedis.KEY_TAG_LIST, key, tag, 3600);
-            if(redisService.getObject(InitRedis.KEY_TAG_LIST, key) == null) {
+            if(tag.getTagName() == null) {
                 return new Response(Code.FAILED, Msg.ADD_FAIL_MSG, "插入数据为空");
             }
+            tagMapper.insert(tag);
         } catch (RuntimeException e) {
             return new Response(Code.FAILED, Msg.ADD_FAIL_MSG, e);
         }
@@ -38,9 +36,8 @@ public class TagServiceImpl implements TagService {
     public Response delTag(Tag tag) {
         int key = tag.getId();
         try {
-            redisService.expire(InitRedis.KEY_TAG_LIST, key, 3, TimeUnit.SECONDS);
             tagMapper.deleteById(key);
-            return new Response(Code.SUCCESS, Msg.DEL_SUCCESS_MSG, redisService.containsKey(InitRedis.KEY_TAG_LIST, key));
+            return new Response(Code.SUCCESS, Msg.DEL_SUCCESS_MSG, tag);
         } catch (RuntimeException e) {
             return new Response(Code.FAILED, Msg.DEL_FAIL_MSG, e);
         }
@@ -68,9 +65,9 @@ public class TagServiceImpl implements TagService {
     }
 
     @Override
-    public Response allTag(Tag tag) {
+    public Response allTag() {
         try {
-            return new Response(Code.SUCCESS, Msg.SEL_SUCCESS_MSG, redisService.allCache(InitRedis.KEY_TAG_LIST));
+            return new Response(Code.SUCCESS, Msg.SEL_SUCCESS_MSG, tagMapper.selectList(null));
         } catch (RuntimeException e) {
             return new Response(Code.FAILED, Msg.SEL_FAIL_MSG, e);
         }
@@ -80,9 +77,8 @@ public class TagServiceImpl implements TagService {
     public Response updTag(Tag tag) {
         int key = tag.getId();
         try {
-            redisService.expire(InitRedis.KEY_TAG_LIST, key, 3, TimeUnit.SECONDS);
             tagMapper.updateById(tag);
-            return new Response(Code.SUCCESS, Msg.UPD_SUCCESS_MSG, redisService.getObject(InitRedis.KEY_TAG_LIST, key));
+            return new Response(Code.SUCCESS, Msg.UPD_SUCCESS_MSG, tag);
         } catch (RuntimeException e) {
             return new Response(Code.FAILED, Msg.UPD_FAIL_MSG, e);
         }

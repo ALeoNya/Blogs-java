@@ -32,7 +32,7 @@ public class ApiController {
     }
 
     @GetMapping("/hello")
-//    @PreAuthorize("hasAuthority('/hello')")
+    @PreAuthorize("hasAuthority('/hello')")
     public void hello(HttpServletResponse response) throws IOException {
         Map<String, Object> map = new HashMap<>();
         map.put("code","0");

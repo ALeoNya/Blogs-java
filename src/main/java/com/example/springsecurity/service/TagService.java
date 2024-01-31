@@ -7,6 +7,6 @@ public interface TagService {
     public Response addTag(Tag tag);
     public Response delTag(Tag tag);
     public Response selTagById(Tag tag);
-    public Response allTag(Tag tag);
+    public Response allTag();
     public Response updTag(Tag tag);
 }

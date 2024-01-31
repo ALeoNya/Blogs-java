@@ -16,27 +16,27 @@ public class ResourceController {
     @Autowired
     private ResourceService resourceService;
 
-    @PostMapping("/addResource")
+    @PostMapping("/resource/addResource")
     public Response addArticle(@RequestBody Resource resource) {
         return resourceService.addResource(resource);
     }
 
-    @PostMapping("/delResource")
+    @PostMapping("/resource/delResource")
     public Response delArticle(@RequestBody Resource resource) {
         return resourceService.delResource(resource);
     }
 
-    @PostMapping("/selResourceById")
+    @PostMapping("/resource/selResourceById")
     public Response selResourceById(@RequestBody Resource resource) {
         return resourceService.selResourceById(resource);
     }
 
-    @PostMapping("/allResource")
-    public Response allArticle(@RequestBody Resource resource) {
-        return resourceService.allResource(resource);
+    @PostMapping("/resource/allResource")
+    public Response allArticle() {
+        return resourceService.allResource();
     }
 
-    @PostMapping("/updResource")
+    @PostMapping("/resource/updResource")
     public Response updArticle(@RequestBody Resource resource) {
         return resourceService.updResource(resource);
     }

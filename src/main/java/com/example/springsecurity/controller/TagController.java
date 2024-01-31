@@ -15,27 +15,27 @@ import org.springframework.web.bind.annotation.RestController;
 public class TagController {
     @Autowired
     private TagService tagService;
-    @PostMapping("/addTag")
-    public Response addTag(Tag Tag) {
-        return tagService.addTag(Tag);
+    @PostMapping("/tag/addTag")
+    public Response addTag(@RequestBody Tag tag) {
+        return tagService.addTag(tag);
     }
 
-    @PostMapping("/delTag")
+    @PostMapping("/tag/delTag")
     public Response delTag(@RequestBody Tag Tag) {
         return tagService.delTag(Tag);
     }
 
-    @PostMapping("/selTagById")
+    @PostMapping("/tag/selTagById")
     public Response selTagById(@RequestBody Tag Tag) {
         return tagService.selTagById(Tag);
     }
 
-    @PostMapping("/allTag")
-    public Response allTag(@RequestBody Tag Tag) {
-        return tagService.allTag(Tag);
+    @PostMapping("/tag/allTag")
+    public Response allTag() {
+        return tagService.allTag();
     }
 
-    @PostMapping("/updTag")
+    @PostMapping("/tag/updTag")
     public Response updTag(@RequestBody Tag Tag) {
         return tagService .updTag(Tag);
     }

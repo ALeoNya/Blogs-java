@@ -71,7 +71,8 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public Response allCategory() {
         try {
-            return new Response(Code.SUCCESS, Msg.SEL_SUCCESS_MSG, redisService.allCache(InitRedis.KEY_CATEGORY_LIST));
+//            return new Response(Code.SUCCESS, Msg.SEL_SUCCESS_MSG, redisService.allCache(InitRedis.KEY_CATEGORY_LIST));
+            return new Response(Code.SUCCESS, Msg.SEL_SUCCESS_MSG, categoryMapper.selectList(null));
         } catch (RuntimeException e) {
             return new Response(Code.FAILED, Msg.SEL_FAIL_MSG, e);
         }
@@ -79,11 +80,11 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public Response updCategory(Category category) {
-        int key = category.getId();
+//        int key = category.getId();
         try {
-            redisService.expire(InitRedis.KEY_CATEGORY_LIST, key, 3, TimeUnit.SECONDS);
+//            redisService.expire(InitRedis.KEY_CATEGORY_LIST, key, 3, TimeUnit.SECONDS);
             categoryMapper.updateById(category);
-            return new Response(Code.SUCCESS, Msg.UPD_SUCCESS_MSG, redisService.getObject(InitRedis.KEY_CATEGORY_LIST, key));
+            return new Response(Code.SUCCESS, Msg.UPD_SUCCESS_MSG, category.getCategoryName());
         } catch (RuntimeException e) {
             return new Response(Code.FAILED, Msg.UPD_FAIL_MSG, e);
         }

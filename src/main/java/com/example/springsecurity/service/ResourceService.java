@@ -7,6 +7,6 @@ public interface ResourceService {
     public Response addResource(Resource resource);
     public Response delResource(Resource resource);
     public Response selResourceById(Resource resource);
-    public Response allResource(Resource resource);
+    public Response allResource();
     public Response updResource(Resource resource);
 }
