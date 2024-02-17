@@ -34,5 +34,4 @@ public class Resource {
 
     @TableField(fill = FieldFill.UPDATE)
     private LocalDateTime updateTime;
-
 }

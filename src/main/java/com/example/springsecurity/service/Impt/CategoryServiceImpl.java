@@ -23,13 +23,15 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public Response addCategory(Category category) {
-        int key = category.getId();
+//        int key = category.getId();
         try {
-            categoryMapper.insert(category);
-            redisService.cacheValue(InitRedis.KEY_CATEGORY_LIST, key, category, 3600);
-            if(redisService.getObject(InitRedis.KEY_CATEGORY_LIST, key) == null) {
+            if(category.getCategoryName() == null) {
                 return new Response(Code.FAILED, Msg.ADD_FAIL_MSG, "插入数据为空");
             }
+
+            categoryMapper.insert(category);
+//            redisService.cacheValue(InitRedis.KEY_CATEGORY_LIST, key, category, 3600);
+
         } catch (RuntimeException e) {
             return new Response(Code.FAILED, Msg.ADD_FAIL_MSG, e);
         }

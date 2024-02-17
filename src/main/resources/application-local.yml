@@ -12,12 +12,8 @@ spring:
 #  virtual-host: /
   redis:
     database: 0
-    #DEV
     host: 127.0.0.1
     port: 6379
-#    #PRO
-#    host: 43.142.32.223
-#    password: 1E6Y01CCCp
     pool:
       max-idle: 16
       max-active: 32

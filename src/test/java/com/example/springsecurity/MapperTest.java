@@ -1,11 +1,9 @@
 package com.example.springsecurity;
 
-import com.example.springsecurity.mapper.ArticleMapper;
-import com.example.springsecurity.mapper.ArticleTagMapper;
-import com.example.springsecurity.mapper.TagMapper;
-import com.example.springsecurity.mapper.UserRoleMapper;
+import com.example.springsecurity.mapper.*;
 import com.example.springsecurity.pojo.Article;
 import com.example.springsecurity.pojo.ArticleTag;
+import com.example.springsecurity.pojo.DTO.ResourceDTO;
 import com.example.springsecurity.pojo.Tag;
 import com.example.springsecurity.service.UserRoleService;
 import org.junit.jupiter.api.Test;
@@ -15,6 +13,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import javax.annotation.Resource;
 import javax.xml.crypto.Data;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @SpringBootTest
 public class MapperTest {
@@ -62,5 +62,29 @@ public class MapperTest {
         tag.setTagName("测试用例");
         tagMapper.insert(tag);
         System.out.println(tagMapper.selectList(null));
+    }
+
+    @Resource
+    ResourceMapper resourceMapper;
+    @Test
+    public void ResourceMapperTest() {
+        // 获取所有模块名
+        List<com.example.springsecurity.pojo.Resource> resourceList = resourceMapper.getFamilyName();
+        List<ResourceDTO> resourceDTOList = new ArrayList<>();
+        // 模块名称+family数据结构
+        for(int i=0; i<resourceList.size(); i++) {
+            // 设置DTO的resource
+//            System.out.println(i);
+            ResourceDTO resourceDTO = new ResourceDTO();
+            resourceDTO.setResource(resourceList.get(i));
+//            System.out.println(resourceDTO.getResource());
+            // 设置DTO的family
+            resourceDTO.setFamily(resourceMapper.getFamily(resourceList.get(i).getId()));
+//            System.out.println(resourceDTO.getFamily());
+            // 添加到resourceDTOList
+            resourceDTOList.add(i,resourceDTO);
+//            System.out.println(resourceDTOList);
+        }
+        System.out.println("the end is: "+resourceDTOList);
     }
 }

@@ -16,8 +16,9 @@ public class CategoryController {
     private CategoryService categoryService;
 
     @PostMapping("/article/addCategory")
-    public Response addCategory(@RequestBody Category Category) {
-        return categoryService.addCategory(Category);
+    public Response addCategory(@RequestBody Category category) {
+        System.out.println(category);
+        return categoryService.addCategory(category);
     }
 
     @PostMapping("/article/delCategory")

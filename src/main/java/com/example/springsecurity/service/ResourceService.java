@@ -8,5 +8,6 @@ public interface ResourceService {
     public Response delResource(Resource resource);
     public Response selResourceById(Resource resource);
     public Response allResource();
+    public Response allResourceByType();
     public Response updResource(Resource resource);
 }

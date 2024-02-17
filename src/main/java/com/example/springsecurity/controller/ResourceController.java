@@ -18,6 +18,7 @@ public class ResourceController {
 
     @PostMapping("/resource/addResource")
     public Response addArticle(@RequestBody Resource resource) {
+        System.out.println(resource);
         return resourceService.addResource(resource);
     }
 
@@ -33,11 +34,12 @@ public class ResourceController {
 
     @PostMapping("/resource/allResource")
     public Response allArticle() {
-        return resourceService.allResource();
+        return resourceService.allResourceByType();
     }
 
     @PostMapping("/resource/updResource")
     public Response updArticle(@RequestBody Resource resource) {
+        System.out.println(resource);
         return resourceService.updResource(resource);
     }
 }

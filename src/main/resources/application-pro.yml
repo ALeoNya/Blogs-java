@@ -1,12 +1,12 @@
 spring:
-  rabbitmq:
-    addresses: 43.142.32.223:5673
-    username: hiiro
-    password: 136601
-    virtual-host: /test
+#  rabbitmq:
+#    addresses: 43.142.32.223:5673
+#    username: hiiro
+#    password: 136601
+#    virtual-host: /test
   redis:
     database: 0
-    host: 43.142.32.223
+    host: 149.88.95.15
     password: 1E6Y01CCCp
     pool:
       max-idle: 16
@@ -15,7 +15,7 @@ spring:
       timeout: 3000
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/kotori?useSSL=false&allowPublicKeyRetrieval=true&rewriteBatchedStatements=true&serverTimezone=UTC
+    url: jdbc:mysql://149.88.95.15:3306/kotori?useSSL=false&allowPublicKeyRetrieval=true&rewriteBatchedStatements=true&serverTimezone=UTC
     username: root
     password: 136601
     #PRO
