@@ -9,5 +9,6 @@ public interface ResourceService {
     public Response selResourceById(Resource resource);
     public Response allResource();
     public Response allResourceByType();
+    public Response allResourceByTree();
     public Response updResource(Resource resource);
 }

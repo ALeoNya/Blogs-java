@@ -30,6 +30,11 @@ public class RoleResourceController {
         return resourceService.selRoleResourceById(RoleResource);
     }
 
+    @PostMapping("/roleResource/selAllResourceIdById")
+    public Response selAllResourceIdById(@RequestBody RoleResource RoleResource) {
+        return resourceService.selAllResourceIdById(RoleResource);
+    }
+
     @PostMapping("/allRoleResource")
     public Response allRoleResource(@RequestBody RoleResource RoleResource) {
         return resourceService.allRoleResource(RoleResource);

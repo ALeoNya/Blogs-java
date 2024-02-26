@@ -28,7 +28,7 @@ public class CategoryServiceImpl implements CategoryService {
             if(category.getCategoryName() == null) {
                 return new Response(Code.FAILED, Msg.ADD_FAIL_MSG, "插入数据为空");
             }
-
+            categoryMapper.autoIncrement();
             categoryMapper.insert(category);
 //            redisService.cacheValue(InitRedis.KEY_CATEGORY_LIST, key, category, 3600);
 

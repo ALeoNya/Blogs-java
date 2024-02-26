@@ -2,6 +2,7 @@ package com.example.springsecurity.service.Impt;
 
 import com.example.springsecurity.mapper.ResourceMapper;
 import com.example.springsecurity.pojo.DTO.ResourceDTO;
+import com.example.springsecurity.pojo.DTO.ResourceTreeDTO;
 import com.example.springsecurity.pojo.Resource;
 import com.example.springsecurity.pojo.Response;
 import com.example.springsecurity.response.Code;
@@ -107,6 +108,31 @@ public class ResourceServiceImpl implements ResourceService {
                 resourceDTOList.add(resourceDTO);
             }
             return new Response(Code.SUCCESS, Msg.SEL_SUCCESS_MSG, resourceDTOList);
+        } catch (RuntimeException e) {
+            return new Response(Code.FAILED, Msg.SEL_FAIL_MSG, e);
+        }
+    }
+
+    @Override
+    public Response allResourceByTree() {
+        try {
+            // 查询“模块”字段获取其id，再用id查询父节点=id的数据，最后返回数据
+            // 获取所有模块名
+            List<com.example.springsecurity.pojo.Resource> resourceList = resourceMapper.getFamilyName();
+            List<ResourceTreeDTO> resourceTreeDTOList = new ArrayList<>();
+            // 模块名称+family数据结构
+            for(int i=0; i<resourceList.size(); i++) {
+                ResourceTreeDTO resourceTreeDTO = new ResourceTreeDTO();
+                // 设置父节点的ID字段
+                resourceTreeDTO.setId(resourceList.get(i).getId());
+                // 设置resourceName字段
+                resourceTreeDTO.setResourceName(resourceList.get(i).getResourceName());
+                // 设置url字段
+                resourceTreeDTO.setUrl(resourceList.get(i).getUrl());
+                resourceTreeDTO.setFamily(resourceMapper.getFamily(resourceList.get(i).getId()));
+                resourceTreeDTOList.add(resourceTreeDTO);
+            }
+            return new Response(Code.SUCCESS, Msg.SEL_SUCCESS_MSG, resourceTreeDTOList);
         } catch (RuntimeException e) {
             return new Response(Code.FAILED, Msg.SEL_FAIL_MSG, e);
         }

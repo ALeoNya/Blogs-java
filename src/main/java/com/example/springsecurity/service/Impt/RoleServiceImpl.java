@@ -17,18 +17,18 @@ import java.util.concurrent.TimeUnit;
 @Service("RoleService")
 public class RoleServiceImpl implements RoleService {
     @Autowired
-    private RedisService redisService;
-    @Autowired
     private RoleMapper roleMapper;
+    @Autowired
+    private RedisService redisService;
     @Override
     public Response addRole(Role role) {
         int key = role.getId();
         try {
-            roleMapper.insert(role);
-            redisService.cacheValue(InitRedis.KEY_ROLE_LIST, key, role, 36000);
-            if(redisService.getRole(role) == null) {
+            if(role.getRoleName() == null) {
                 return new Response(Code.FAILED, Msg.ADD_FAIL_MSG, "插入数据为空");
             }
+            roleMapper.autoIncrement();
+            roleMapper.insert(role);
         } catch (RuntimeException e) {
             return new Response(Code.FAILED, Msg.ADD_FAIL_MSG, e);
         }
@@ -39,38 +39,62 @@ public class RoleServiceImpl implements RoleService {
     public Response delRole(Role role) {
         int key = role.getId();
         try {
-            redisService.expire(InitRedis.KEY_ROLE_LIST, key, 3, TimeUnit.SECONDS);
             roleMapper.deleteById(key);
-            return new Response(Code.SUCCESS, Msg.DEL_SUCCESS_MSG, redisService.containsKey(InitRedis.KEY_ROLE_LIST, key));
+            return new Response(Code.SUCCESS, Msg.DEL_SUCCESS_MSG, null);
         } catch (RuntimeException e) {
             return new Response(Code.FAILED, Msg.DEL_FAIL_MSG, e);
         }
     }
 
     @Override
-    public Response allRole(Role role) {
+    public Response allRole() {
         try {
-            return new Response(Code.SUCCESS, Msg.SEL_SUCCESS_MSG, redisService.allCache(InitRedis.KEY_ROLE_LIST));
+            return new Response(Code.SUCCESS, Msg.SEL_SUCCESS_MSG, roleMapper.selectList(null));
         } catch (RuntimeException e) {
             return new Response(Code.FAILED, Msg.SEL_FAIL_MSG, e);
         }
     }
 
+//    @Override
+//    public Response selRoleById(Role role) {
+//        int key = role.getId();
+//        try {
+//            if(redisService.containsKey(InitRedis.KEY_ROLE_LIST, key)) {
+//                return new Response(Code.SUCCESS, Msg.SEL_SUCCESS_MSG, redisService.getRole(role));
+//            } else {
+//                Role get = roleMapper.selectById(key);
+//                //查到null值缓存到redis设置过期时间为6min
+//                if(get == null) {
+//                    redisService.cacheValue(InitRedis.KEY_ROLE_LIST, key, get, 360);
+//                    return new Response(Code.FAILED, Msg.SEL_FAIL_MSG, "你查询的是一个空值");
+//                }
+//                redisService.cacheValue(InitRedis.KEY_ROLE_LIST, key, get, 3600);
+//                return new Response(Code.SUCCESS, Msg.SEL_SUCCESS_MSG, redisService.getRole(role));
+//            }
+//
+//        } catch (RuntimeException e) {
+//            return new Response(Code.FAILED, Msg.SEL_FAIL_MSG, e);
+//        }
+//    }
+
+    /**
+     * 登录判断权限
+     * @param role
+     * @return
+     */
     @Override
     public Response selRoleById(Role role) {
         int key = role.getId();
         try {
-            if(redisService.containsKey(InitRedis.KEY_ROLE_LIST, key)) {
-                return new Response(Code.SUCCESS, Msg.SEL_SUCCESS_MSG, redisService.getRole(role));
+            if(role.getId() == null) {
+                return new Response(Code.SUCCESS, Msg.SEL_SUCCESS_MSG, "插入数值不能为空");
             } else {
-                Role get = roleMapper.selectById(key);
+                Role get = roleMapper.selectById(role.getId());
                 //查到null值缓存到redis设置过期时间为6min
                 if(get == null) {
-                    redisService.cacheValue(InitRedis.KEY_ROLE_LIST, key, get, 360);
                     return new Response(Code.FAILED, Msg.SEL_FAIL_MSG, "你查询的是一个空值");
                 }
-                redisService.cacheValue(InitRedis.KEY_ROLE_LIST, key, get, 3600);
-                return new Response(Code.SUCCESS, Msg.SEL_SUCCESS_MSG, redisService.getRole(role));
+                return new Response(Code.SUCCESS, Msg.SEL_SUCCESS_MSG, get);
             }
 
         } catch (RuntimeException e) {
@@ -82,9 +106,8 @@ public class RoleServiceImpl implements RoleService {
     public Response updRole(Role role) {
         int key = role.getId();
         try {
-            redisService.expire(InitRedis.KEY_ROLE_LIST, key, 3, TimeUnit.SECONDS);
             roleMapper.updateById(role);
-            return new Response(Code.SUCCESS, Msg.UPD_SUCCESS_MSG, redisService.getRole(role));
+            return new Response(Code.SUCCESS, Msg.UPD_SUCCESS_MSG, null);
         } catch (RuntimeException e) {
             return new Response(Code.FAILED, Msg.UPD_FAIL_MSG, e);
         }

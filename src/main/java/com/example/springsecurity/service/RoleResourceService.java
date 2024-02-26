@@ -10,6 +10,7 @@ public interface RoleResourceService {
     public Response addRoleResource(RoleResource roleResource);
     public Response delRoleResource(RoleResource roleResource);
     public Response selRoleResourceById(RoleResource roleResource);
+    public Response selAllResourceIdById(RoleResource roleResource);
     public Response allRoleResource(RoleResource roleResource);
     public Response updRoleResource(RoleResource roleResource);
 }

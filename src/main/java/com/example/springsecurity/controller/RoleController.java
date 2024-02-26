@@ -15,27 +15,27 @@ public class RoleController {
     @Autowired
     private RoleService roleService;
 
-    @PostMapping("/addRole")
+    @PostMapping("/role/addRole")
     public Response addRole(@RequestBody Role Role) {
         return roleService.addRole(Role);
     }
 
-    @PostMapping("/delRole")
+    @PostMapping("/role/delRole")
     public Response delRole(@RequestBody Role Role) {
         return roleService.delRole(Role);
     }
 
-    @PostMapping("/selRoleById")
+    @PostMapping("/role/selRoleById")
     public Response selRoleById(@RequestBody Role Role) {
         return roleService.selRoleById(Role);
     }
 
-    @PostMapping("/allRole")
-    public Response allRole(@RequestBody Role Role) {
-        return roleService.allRole(Role);
+    @PostMapping("/role/allRole")
+    public Response allRole() {
+        return roleService.allRole();
     }
 
-    @PostMapping("/updRole")
+    @PostMapping("/role/updRole")
     public Response updRole(@RequestBody Role Role) {
         return roleService.updRole(Role);
     }

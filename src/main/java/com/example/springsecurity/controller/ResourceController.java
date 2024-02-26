@@ -37,6 +37,11 @@ public class ResourceController {
         return resourceService.allResourceByType();
     }
 
+    @PostMapping("/resource/treeResource")
+    public Response treeResource() {
+        return resourceService.allResourceByTree();
+    }
+
     @PostMapping("/resource/updResource")
     public Response updArticle(@RequestBody Resource resource) {
         System.out.println(resource);
