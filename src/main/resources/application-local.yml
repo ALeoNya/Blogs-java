@@ -36,6 +36,10 @@ spring:
         maxPoolSize: 3
         keepAliveSeconds: 60  #非核心线程TTL
         queueCapacity: 20 # 队列容量
-
+  minio:
+    endpoint: http://149.88.95.15:9000 #Minio服务所在地址
+    bucketName: image #存储桶名称
+    accessKey: FCr70ZfLSBaNldfkffvC #访问的key
+    secretKey: 6tvAR6LhLohuCMgw4tFfqAdjq2t33Oizniot6N7i #访问的秘钥
 
 

@@ -8,6 +8,8 @@ public class Msg {
     public final static String DEL_SUCCESS_MSG = "删除数据成功";
     public final static String SEL_SUCCESS_MSG = "查询数据成功";
     public final static String UPD_SUCCESS_MSG = "修改数据成功";
+    public final static String UPLOAD_PICTURE_SUCCESS = "上传图片成功";
+    public final static String DELETE_SUCCESS_MSG = "删除图片成功";
 
     /**
      * 失败
