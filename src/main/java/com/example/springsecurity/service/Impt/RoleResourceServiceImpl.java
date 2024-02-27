@@ -83,21 +83,8 @@ public class RoleResourceServiceImpl implements RoleResourceService {
 
     @Override
     public Response selAllResourceIdById(RoleResource roleResource) {
-        int key = roleResource.getId();
         try {
-            if(redisService.containsKey(InitRedis.KEY_ROLERESOURCE_LIST, key)) {
-                return new Response(Code.SUCCESS, Msg.SEL_SUCCESS_MSG, redisService.getRoleResource(roleResource));
-            } else {
-                RoleResource get = roleResourceMapper.selectById(key);
-                //查到null值缓存到redis设置过期时间为6min
-                if(get == null) {
-                    redisService.cacheValue(InitRedis.KEY_ROLERESOURCE_LIST, key, get, 360);
-                    return new Response(Code.FAILED, Msg.SEL_FAIL_MSG, "你查询的是一个空值");
-                }
-                redisService.cacheValue(InitRedis.KEY_ROLERESOURCE_LIST, key, get, 3600);
-                return new Response(Code.SUCCESS, Msg.SEL_SUCCESS_MSG, redisService.getRoleResource(roleResource));
-            }
-
+            return new Response(Code.SUCCESS, Msg.SEL_SUCCESS_MSG, roleResourceMapper.getResourceByRoleId(roleResource));
         } catch (RuntimeException e) {
             return new Response(Code.FAILED, Msg.SEL_FAIL_MSG, e);
         }

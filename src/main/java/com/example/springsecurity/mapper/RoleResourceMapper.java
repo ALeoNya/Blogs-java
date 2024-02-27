@@ -28,4 +28,7 @@ public interface RoleResourceMapper extends BaseMapper<RoleResource> {
 
     @Update("alter table `kotori`.`k_role_resource` auto_increment = 1")
     void autoIncrement();
+
+    @Select("SELECT resource_id FROM `kotori`.`k_role_resource` WHERE role_id = #{roleId}")
+    List<Integer> getResourceByRoleId(RoleResource resource);
 }

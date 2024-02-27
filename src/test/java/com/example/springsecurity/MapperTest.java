@@ -4,6 +4,7 @@ import com.example.springsecurity.mapper.*;
 import com.example.springsecurity.pojo.Article;
 import com.example.springsecurity.pojo.ArticleTag;
 import com.example.springsecurity.pojo.DTO.ResourceDTO;
+import com.example.springsecurity.pojo.RoleResource;
 import com.example.springsecurity.pojo.Tag;
 import com.example.springsecurity.service.UserRoleService;
 import org.junit.jupiter.api.Test;
@@ -86,5 +87,14 @@ public class MapperTest {
 //            System.out.println(resourceDTOList);
         }
         System.out.println("the end is: "+resourceDTOList);
+    }
+
+    @Resource
+    RoleResourceMapper roleResourceMapper;
+    @Test
+    public void getResourceId() {
+        RoleResource roleResource = new RoleResource();
+        roleResource.setRoleId(1);
+        System.out.println(roleResourceMapper.getResourceByRoleId(roleResource));
     }
 }
