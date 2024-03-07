@@ -57,6 +57,15 @@ public class ArticleController {
         }
     }
 
+    @PostMapping("/article/allArticleDTO")
+    public Response allArticleDTO() {
+        try {
+            return new Response(Code.SUCCESS, Msg.SEL_SUCCESS_MSG, articleService.exchangeData());
+        } catch (Exception e) {
+            return new Response(Code.FAILED, Msg.SEL_FAIL_MSG, false);
+        }
+    }
+
     @PostMapping("/article/allDelArticle")
     public Response allDelArticle() {
         try {

@@ -71,4 +71,8 @@ public class ArticleTest {
         System.out.println(articleMapper.selectById(10));
     }
 
+    @Test
+    public void exchangeData() {
+        System.out.println(articleService.exchangeData());
+    }
 }

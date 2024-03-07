@@ -3,6 +3,7 @@ package com.example.springsecurity;
 import com.example.springsecurity.mapper.*;
 import com.example.springsecurity.pojo.Article;
 import com.example.springsecurity.pojo.ArticleTag;
+import com.example.springsecurity.pojo.DTO.ArticleDTO;
 import com.example.springsecurity.pojo.DTO.ResourceDTO;
 import com.example.springsecurity.pojo.RoleResource;
 import com.example.springsecurity.pojo.Tag;
@@ -96,5 +97,11 @@ public class MapperTest {
         RoleResource roleResource = new RoleResource();
         roleResource.setRoleId(1);
         System.out.println(roleResourceMapper.getResourceByRoleId(roleResource));
+    }
+
+    @Test
+    public void allArticleAsDTO() {
+//        List<ArticleDTO> articleDTOList = articleMapper.allArticleAsDTO();
+        System.out.println(articleMapper.allArticleAsDTO());
     }
 }

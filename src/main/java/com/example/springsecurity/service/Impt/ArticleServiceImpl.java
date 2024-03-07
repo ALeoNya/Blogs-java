@@ -5,15 +5,18 @@ import com.example.springsecurity.mapper.ArticleMapper;
 import com.example.springsecurity.mapper.ArticleTagMapper;
 import com.example.springsecurity.pojo.Article;
 import com.example.springsecurity.pojo.ArticleTag;
+import com.example.springsecurity.pojo.DTO.ArticleDTO;
 import com.example.springsecurity.service.ArticleService;
 import com.example.springsecurity.util.redis.service.RedisService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
-
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 import static com.example.springsecurity.util.redis.config.InitRedis.*;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.stream.Collectors;
 
 
 @Service("ArticleService")
@@ -191,6 +194,41 @@ public class ArticleServiceImpl implements ArticleService {
             return false;
         }
         return true;
+    }
+
+    /**
+     * 转换日期Method
+     * @param
+     * @return
+     */
+    @Override
+    public List<ArticleDTO> exchangeData() {
+        List<Article> articles = articleMapper.selectList(null);
+        List<ArticleDTO> exchangeList = articles.stream()
+                .map(article -> {
+                    ArticleDTO dto = new ArticleDTO();
+                    dto.setId(article.getId());
+                    dto.setUserId(article.getUserId());
+                    dto.setCategoryId(article.getCategoryId());
+                    dto.setArticleCover(article.getArticleCover());
+                    dto.setArticleTitle(article.getArticleTitle());
+                    dto.setArticleAbstract(article.getArticleAbstract());
+                    dto.setArticleContent(article.getArticleContent());
+                    dto.setIsTop(article.getIsTop());
+                    dto.setIsFeatured(article.getIsFeatured());
+                    dto.setIsDelete(article.getIsDelete());
+                    dto.setStatus(article.getStatus());
+                    dto.setType(article.getType());
+                    dto.setPassword(article.getPassword());
+                    dto.setOriginalUrl(article.getOriginalUrl());
+                    // 使用DateTimeFormatter来格式化LocalDateTime为String
+                    dto.setCreateTime(article.getCreateTime().format(DateTimeFormatter.ofPattern("yyyy.MM.dd")));
+                    dto.setUpdateTime(String.valueOf(article.getUpdateTime()));
+                    return dto;
+                })
+                .collect(Collectors.toList());
+//        System.out.println(dto);
+        return exchangeList;
     }
 
     /**
