@@ -16,4 +16,6 @@ public interface ArticleService {
     Map<String, Object> allArticle();
     boolean updArticle(Article article);
     List<ArticleDTO> exchangeData();
+
+    List<Article> paging(int pageNum);
 }

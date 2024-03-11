@@ -155,9 +155,6 @@ public class ArticleServiceImpl implements ArticleService {
             articleMapper.selectList(wrapper)
                     .stream()
                     .forEach(articles -> redisService.cacheValue(KEY_ARTICLE_LIST, articles.getId(), articles, 3600));
-            // TODO 排序问题？如何实现时间由晚到早的进行排序呢？
-            //  1.是使用string拿到数据后再排序？但排序的key是字符串难以排序（
-            //  2.使用Zset集合呢？集合增删操作复杂需要直接过期整个set再从DB查询（
         }
 //        SortedMap<String, Object> sortedMap = new TreeMap<>(Comparator.reverseOrder());
         for (String key : keys) {
@@ -227,8 +224,22 @@ public class ArticleServiceImpl implements ArticleService {
                     return dto;
                 })
                 .collect(Collectors.toList());
-//        System.out.println(dto);
         return exchangeList;
+    }
+
+    /**
+     * Paging 分页
+     * @return
+     */
+    @Override
+    public List<Article> paging(int pageNum) {
+        int offset = pageNum;
+        // 根据页数计算偏移量 并且判断偏移量是否超出范围
+
+        // 根据偏移量查询数据库
+
+        // 返回查询结果给前端
+        return null;
     }
 
     /**

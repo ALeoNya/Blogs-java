@@ -24,4 +24,7 @@ public interface ArticleMapper extends BaseMapper<Article> {
 
     @Select("SELECT * FROM kotori.k_article")
     List<ArticleDTO> allArticleAsDTO();
+
+    @Select("SELECT * FROM `kotori`.`k_article` LIMIT #{offset},5;\n")
+    List<Article> paging(int offset);
 }
