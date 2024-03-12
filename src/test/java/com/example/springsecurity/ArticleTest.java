@@ -75,4 +75,9 @@ public class ArticleTest {
     public void exchangeData() {
         System.out.println(articleService.exchangeData());
     }
+
+    @Test
+    public void paging() {
+        System.out.println(articleService.paging(4));
+    }
 }
