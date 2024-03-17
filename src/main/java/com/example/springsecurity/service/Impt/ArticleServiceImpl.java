@@ -234,7 +234,7 @@ public class ArticleServiceImpl implements ArticleService {
     @Override
     public List<Article> paging(int pageNum) {
         List<Article> all = articleMapper.selectList(null);
-        int offset = (pageNum-1)*5;
+        int offset = (pageNum-1)*4;
         // 根据页数计算偏移量 并且判断偏移量是否超出范围
         int size = all.size();
         if(offset > size) {
