@@ -112,9 +112,7 @@ public class ArticleController {
     public Response pagingArticle(@PathVariable("pageNum") int pageNum) {
         return new Response(Code.SUCCESS, Msg.SEL_SUCCESS_MSG, articleService.paging(pageNum));
     }
-//    @ApiOperation("根据前端传回的页数分页")
-//    @PostMapping("/article/pagingArticle")
-//    public Response pagingArticle(@RequestParam("pageNum") int pageNum) {
-//        return new Response(Code.SUCCESS, Msg.SEL_SUCCESS_MSG, articleService.paging(pageNum));
-//    }
+
+    //TODO
+    // This is a test
 }
