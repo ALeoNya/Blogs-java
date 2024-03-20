@@ -24,6 +24,11 @@ public class MinioUtil {
     @Autowired
     private MinioClient minioClient;
 
+    /**
+     * 是否存在bucket
+     * @param bucketName
+     * @return
+     */
     public Boolean bucketExists(String bucketName) {
         Boolean found;
         try {

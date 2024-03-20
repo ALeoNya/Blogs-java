@@ -228,12 +228,13 @@ public class ArticleServiceImpl implements ArticleService {
     }
 
     /**
-     * Paging 分页
+     * Paging 分页 返回分页结果
      * @return
      */
     @Override
     public List<Article> paging(int pageNum) {
         List<Article> all = articleMapper.selectList(null);
+
         int offset = (pageNum-1)*4;
         // 根据页数计算偏移量 并且判断偏移量是否超出范围
         int size = all.size();

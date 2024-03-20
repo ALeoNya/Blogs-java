@@ -27,4 +27,9 @@ public interface ArticleMapper extends BaseMapper<Article> {
 
     @Select("SELECT * FROM `kotori`.`k_article` LIMIT #{offset},4;\n")
     List<Article> paging(int offset);
+
+    // 转换时间戳格式datatime=>YYYY.MM.DD
+    @Select("SELECT DATE_FORMAT(create_time, '%Y.%m.%d') AS createTime FROM `kotori`.`k_article`;")
+    List<Article> dateFormat();
+
 }

@@ -73,11 +73,6 @@ public class ArticleController {
         }
     }
 
-//    @PostMapping("/article/getArticleByLast")
-//    public Response getArticleByLast() {
-//
-//    }
-
     @ApiOperation("查询所有被假删除的文章")
     @PostMapping("/article/allDelArticle")
     public Response allDelArticle() {
@@ -98,7 +93,7 @@ public class ArticleController {
         }
     }
 
-    @ApiOperation("根据id新增文章")
+    @ApiOperation("根据id更新文章")
     @PostMapping("/article/updArticle")
     public Response updArticle(@RequestBody Article article) {
         if(articleService.updArticle(article)) {
@@ -107,12 +102,11 @@ public class ArticleController {
         return new Response(Code.FAILED, Msg.UPD_FAIL_MSG, "请重新更新");
     }
 
-    @ApiOperation("根据前端传回的页数分页")
+    @ApiOperation("根据前端传回的页数进行分页")
     @GetMapping("/article/pagingArticle/{pageNum}")
     public Response pagingArticle(@PathVariable("pageNum") int pageNum) {
         return new Response(Code.SUCCESS, Msg.SEL_SUCCESS_MSG, articleService.paging(pageNum));
     }
 
     //TODO
-    // This is a test
 }

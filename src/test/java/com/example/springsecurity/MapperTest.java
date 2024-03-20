@@ -104,4 +104,10 @@ public class MapperTest {
 //        List<ArticleDTO> articleDTOList = articleMapper.allArticleAsDTO();
         System.out.println(articleMapper.allArticleAsDTO());
     }
+
+    @Test
+    public void dateFormat() {
+//        List<ArticleDTO> articleDTOList = articleMapper.allArticleAsDTO();
+        System.out.println(articleMapper.dateFormat());
+    }
 }
