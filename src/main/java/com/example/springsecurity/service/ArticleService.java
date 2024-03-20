@@ -17,5 +17,5 @@ public interface ArticleService {
     boolean updArticle(Article article);
     List<ArticleDTO> exchangeData();
 
-    List<Article> paging(int pageNum);
+    List<ArticleDTO> paging(int pageNum);
 }

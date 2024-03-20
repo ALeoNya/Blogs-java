@@ -29,7 +29,7 @@ public interface ArticleMapper extends BaseMapper<Article> {
     List<Article> paging(int offset);
 
     // 转换时间戳格式datatime=>YYYY.MM.DD
-    @Select("SELECT DATE_FORMAT(create_time, '%Y.%m.%d') AS createTime FROM `kotori`.`k_article`;")
-    List<Article> dateFormat();
+    @Select("SELECT *,DATE_FORMAT(create_time, '%Y.%m.%d') AS createTime FROM `kotori`.`k_article` ORDER BY create_time DESC LIMIT #{offset},4;")
+    List<ArticleDTO> pagingByateFormat(int offset);
 
 }

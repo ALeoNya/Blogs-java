@@ -108,6 +108,6 @@ public class MapperTest {
     @Test
     public void dateFormat() {
 //        List<ArticleDTO> articleDTOList = articleMapper.allArticleAsDTO();
-        System.out.println(articleMapper.dateFormat());
+        System.out.println(articleMapper.pagingByateFormat(1));
     }
 }

@@ -232,7 +232,7 @@ public class ArticleServiceImpl implements ArticleService {
      * @return
      */
     @Override
-    public List<Article> paging(int pageNum) {
+    public List<ArticleDTO> paging(int pageNum) {
         List<Article> all = articleMapper.selectList(null);
 
         int offset = (pageNum-1)*4;
@@ -242,7 +242,7 @@ public class ArticleServiceImpl implements ArticleService {
             return null;
         }
         // 根据偏移量查询数据库,返回查询结果给前端
-        return articleMapper.paging(offset);
+        return articleMapper.pagingByateFormat(offset);
     }
 
     /**
